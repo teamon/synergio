@@ -1,172 +1,3 @@
-
-
-
-// window.onload = function () {
-
-//  
-//  
-
-//  
-//     var R = Raphael("holder", 640, 480);
-//     R.connections = [];
-//  
-//  var S = {
-//      devices: [],
-//      isDrag: false,
-//      
-//      pad: function(x, y, type){
-//          var color = type == "IN" ? "#f00" : "#0f0"
-//          
-//          var p = R.circle(x, y, 5);
-//          p.padType = type;
-//          p.attr({fill: color, stroke: color, "fill-opacity": 0, "stroke-width": 2})
-//          
-//          p.connect = function(other){
-//              var con = R.connect(this, other);
-//              p.connections
-//              
-//          }
-//      }
-//      
-//  }
-//  
-//  
-//  
-//  
-//  
-//  function Pad(x, y, type){
-//      
-//      this.circle.mousedown(function(e){
-//          console.log(c)
-//          var mousePad = Pad(this.circle.attrs.cx, this.circle.attrs.cy, 5).attr({fill: "#fff", stroke: "#fff", "stroke-width": 2})
-//          p.connect(c);
-//          p.dx = p.clientX;
-//          p.dy = p.clientY;
-//          p.pad = true
-//          p.from = c;
-//          isDrag = p;
-//          // this.animate({"fill-opacity": .2}, 500);
-//          e.preventDefault && e.preventDefault();
-//      })
-//      
-//      this.connect = function(a, b){
-//          var c = R.connection(a,b)
-//          S.connections.push(c);
-//          this.connection = connect(p, c)
-//          return c;
-//      }
-//      
-//      return c;
-//  };
-//  
-//  
-
-//  
-//  
-//  function RandomGenerator(x,y){
-//      Device(x,y);
-//      this.name = "Random";
-//      this.inputs = [];
-//      this.outputs = [];
-//  }
-//  
-//  function Graph(x,y){
-//      Device(x,y);
-//      this.name = "Graph";
-//      this.inputs = [
-//                     LineIn(function(data){
-//                            // some obj-c processing
-//                            console.log("got " + data);
-//                            }),
-//                     LineIn(function(data){
-//                            
-//                            })
-//                     ];
-//  }
-//  
-//  function LineIn(fun){
-//      this.send = fun
-//  }
-//  
-//  function LineOut(){
-//      this.connections = [];
-//      this.send = function(data){
-//          connection.forEach(function(con){
-//                             con.send(data)
-//                             })
-//      }
-//  }
-//  
-//  
-//  
-//     // drag & drop
-
-//     document.onmouseup = function () {
-//         if (S.isDrag && S.isDrag.pad){
-//             disconnect(S.isDrag.connection)
-//          
-//          
-//             function findPad(drag){
-//                 var box = drag.getBBox()
-//                 var E = 5
-//                 var from = drag.from
-//                 for(i=0; i<S.devices.length; i++){
-//                     if(S.devices[i] != from.device){
-//                         var p = S.devices[i].pads.find(function(p){
-//                                                   if(p.padType == from.padType) return false;
-//                                                   var b = p.getBBox()
-//                                                   console.log(b)
-//                                                   return (Math.abs(b.x - box.x) < E && Math.abs(b.y - box.y) < E);
-//                                                   })
-//                         if(p) return p;
-//                     }
-//                 }
-//                 return null;
-//          }
-//          
-//          if(p = findPad(S.isDrag)){
-//              console.log(p)
-//              p.connect(S.isDrag.from)
-//          }
-//          
-//          S.isDrag.remove()
-//          
-//      }
-//         // isDrag && isDrag.animate({"fill-opacity": 0}, 500);
-//         S.isDrag = false;
-//     };
-//     
-// 
-//     function disconnect(con){
-//         for(i = 0; i<connections.length; i++){
-//             if(connections[i] == con){
-//                 connections.splice(i, 1)
-//                 con.remove()
-//                 return;
-//             }
-//         }
-//     }
-//     
-//     
-// 
-//  
-//     
-//     
-//     
-//     var d1 = new RandomGenerator(50, 50)
-//     var d2 = new Graph(300, 100)
-//     S.devices.push(d1)
-//  
-//  S.devices.push(d2)
-//     
-//     // connect(d1.pads[1], d2.pads[0])
-//     
-// };
-// 
-// 
-// 
-// 
-
 window.onload = function(){
     
 // =========
@@ -192,7 +23,8 @@ var R = Raphael("holder", 640, 480);
 
 var S = {
     isDrag: false,
-    connections: []
+    connections: [],
+    devices: []
 }
 
 // drag & drop
@@ -200,13 +32,7 @@ var S = {
 document.onmousemove = function (e) {
     e = e || window.event;
     if (S.isDrag) {
-        // if(S.isDrag.pad){
-            // drag pad
-            // S.isDrag.translate(e.clientX - isDrag.dx, e.clientY - isDrag.dy);
-        // } else {
-            S.isDrag.item.translate(e.clientX - S.isDrag.dx, e.clientY - S.isDrag.dy);
-        // }
-        
+        S.isDrag.item.translate(e.clientX - S.isDrag.dx, e.clientY - S.isDrag.dy);
         // refresh connections
         S.connections.forEach(function(con){ con.update() })
         
@@ -216,6 +42,41 @@ document.onmousemove = function (e) {
     }
 };
 
+document.onmouseup = function(e){
+    if(S.isDrag && S.isDrag.to){
+        // find socket
+        var socket = function findSocket(from, sck){
+            var box = sck.pad.getBBox();
+            var E = 5
+            console.log(S.devices)
+            for(var i=0; i<S.devices.length; i++){
+                console.log(i)
+                if(S.devices[i] != from.device){
+                    var sockets;
+                    console.log("from:")
+                    console.log(from)
+                    if(from.type == "INPUT") sockets = S.devices[i].sockets.output
+                    else if(from.type == "OUTPUT") sockets = S.devices[i].sockets.input
+                    
+                    var s = sockets.find(function(e){
+                        var b = e.pad.getBBox();
+                        return (Math.abs(b.x - box.x) < E && Math.abs(b.y - box.y) < E); 
+                    })
+                    
+                    if(s) return s;
+                }
+            }
+            return null;
+        }(S.isDrag.from, S.isDrag.to)
+        
+        if(socket){
+            S.isDrag.from.connect(socket);
+        }
+        
+        S.isDrag.to.remove();
+    }
+    S.isDrag = false;
+}
 
 
 function SocketConnection(obj1, obj2){
@@ -263,10 +124,35 @@ function SocketConnection(obj1, obj2){
 }
 
 
-function Socket(x, y, type){
-    var color = type == "INPUT" ? "#f00" : "#0f0"
-    this.pad = R.circle(x, y, 5).attr({stroke: color,  "stroke-width": 2})
+function Socket(device, x, y, type){
+    this.device = device;
+    this.type = type;
     
+    var self = this;
+    var color = function(t){
+        if(t == "INPUT") return ["#f00", "#333"];
+        else if(t == "OUTPUT") return ["#0f0", "#333"];
+        else if(t == "MOUSE") return ["none", "none"];
+    }(type);
+
+    this.pad = R.circle(x, y, 5).attr({stroke: color[0],  "stroke-width": 2, fill: color[1]})
+    
+    this.pad.mousedown(function(e){
+        console.log(self.pad.attrs.cx)
+        var mSocket = new Socket(null, self.pad.attrs.cx, self.pad.attrs.cy, "MOUSE")
+        self.connect(mSocket);
+        
+        S.isDrag = {
+            dx: e.clientX,
+            dy: e.clientY,
+            from: self,
+            to: mSocket,
+            item: mSocket.pad
+        }
+        // this.animate({"fill-opacity": .2}, 500);
+        e.preventDefault && e.preventDefault();
+    })
+
     this.connectedSockets = [];
     this.connect = function(other){
         var self = this;
@@ -277,6 +163,22 @@ function Socket(x, y, type){
             this.connectedSockets.push(other);
         }
     }
+    
+    this.disconnectAll = function(){
+        var self = this;
+        S.connections.forEach(function(con){
+            if(con.from == self || con.to == self){
+                con.remove()
+            }
+            //self.connectedSockets.removeAll();
+        })
+    }
+    
+    this.remove = function(){
+        this.disconnectAll();
+        this.pad.remove();
+    }
+    
 }
 
 function Device(opts){
@@ -289,13 +191,13 @@ function Device(opts){
     this.set = R.set();
     
     opts.input.forEach(function(socket, i){
-        var s = new Socket(opts.x + 10, opts.y + 25 + i * 15, "INPUT")
+        var s = new Socket(self, opts.x + 10, opts.y + 25 + i * 15, "INPUT")
         self.sockets.input.push(s);
         self.set.push(s.pad);
     })
     
     opts.output.forEach(function(socket, i){
-        var s = new Socket(opts.x + 90, opts.y + 25 + i * 15, "OUTPUT")
+        var s = new Socket(self, opts.x + 90, opts.y + 25 + i * 15, "OUTPUT")
         self.sockets.output.push(s);
         self.set.push(s.pad);
     })
@@ -315,7 +217,6 @@ function Device(opts){
             dy: e.clientY,
             item: self.set
         }
-        // this.animate({"fill-opacity": .2}, 500);
         e.preventDefault && e.preventDefault();
     })
     
@@ -323,6 +224,7 @@ function Device(opts){
         S.isDrag = false;
     })
     
+    S.devices.push(this)
 }
 
 
