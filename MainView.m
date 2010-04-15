@@ -17,7 +17,7 @@
 
 - (void)webView:(WebView *)sender windowScriptObjectAvailable: (WebScriptObject *)windowScriptObject {
 	Synergio *syn = [[Synergio alloc] init];
-	[windowScriptObject setValue:syn forKey:@"synergio"];
+	[windowScriptObject setValue:syn forKey:@"Synergio"];
 }
 
 - (void)loadBundleFile:(NSString *)bundleFileName

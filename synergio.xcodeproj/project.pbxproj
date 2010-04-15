@@ -122,12 +122,12 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				6FB810861177454000E5B634 /* app.js */,
 				6FB8138F1177559C00E5B634 /* raphael.js */,
 				8D1107310486CEB800E47090 /* synergio-Info.plist */,
 				089C165CFE840E0CC02AAC07 /* InfoPlist.strings */,
 				1DDD58140DA1D0A300B32029 /* MainMenu.xib */,
 				6FB810841177452B00E5B634 /* main.html */,
-				6FB810861177454000E5B634 /* app.js */,
 			);
 			name = Resources;
 			sourceTree = "<group>";

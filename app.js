@@ -54,14 +54,10 @@ document.onmouseup = function(e){
         // find socket
         var socket = function findSocket(from, sck){
             var box = sck.pad.getBBox();
-            var E = 5
-            console.log(S.devices)
+            var E = 7
             for(var i=0; i<S.devices.length; i++){
-                console.log(i)
                 if(S.devices[i] != from.device){
                     var sockets;
-                    console.log("from:")
-                    console.log(from)
                     if(from.type == "INPUT") sockets = S.devices[i].sockets.output
                     else if(from.type == "OUTPUT") sockets = S.devices[i].sockets.input
                     
@@ -118,7 +114,6 @@ function SocketConnection(obj1, obj2){
     
     var self = this;
     this.line.dblclick(function(){
-        console.log("remove line")
         self.remove();
     })
 
@@ -138,7 +133,8 @@ function SocketConnection(obj1, obj2){
     }
 }
 
-function Socket(device, x, y, type){
+function Socket(device, x, y, type, opts){
+    if(!opts) opts = {name:""}
     this.device = device;
     this.type = type;
     
@@ -150,9 +146,12 @@ function Socket(device, x, y, type){
     }(type);
 
     this.pad = R.circle(x, y, 5).attr({stroke: color[0],  "stroke-width": 2, fill: color[1]})
+    this.label = R.set();
+    this.label.push(R.rect(x-30, y+20, 60, 20, 3).attr({stroke: "#555", fill: "#333"}))
+    this.label.push(R.text(x, y+31, opts.name).attr({fill: "#ccc", "text-align": "left", "font-family": "Monaco", "font-size": "9px"}))
+    this.label.hide();
     
     this.pad.mousedown(function(e){
-        console.log(self.pad.attrs.cx)
         var mSocket = new Socket(null, self.pad.attrs.cx, self.pad.attrs.cy, "MOUSE")
         self.connect(mSocket);
         
@@ -165,6 +164,12 @@ function Socket(device, x, y, type){
         }
         // this.animate({"fill-opacity": .2}, 500);
         e.preventDefault && e.preventDefault();
+    })
+    
+    this.pad.hover(function(){
+        self.label.show();
+    }, function(){
+        self.label.hide();
     })
 
     this.connectedSockets = [];
@@ -203,6 +208,14 @@ function Socket(device, x, y, type){
         this.pad.remove();
     }
     
+    this.send = function(data){
+        this.connectedSockets.forEach(function(s){
+            s.fun(data);
+        })
+    }
+    
+    this.fun = opts.fun
+    
 }
 
 function Device(opts){
@@ -215,22 +228,25 @@ function Device(opts){
     this.set = R.set();
     
     opts.input.forEach(function(socket, i){
-        var s = new Socket(self, opts.x + 10, opts.y + 25 + i * 15, "INPUT")
+        var s = new Socket(self, opts.x + 10, opts.y + 30 + i * 15, "INPUT", socket)
         self.sockets.input.push(s);
         self.set.push(s.pad);
+        self.set.push(s.label);
     })
     
     opts.output.forEach(function(socket, i){
-        var s = new Socket(self, opts.x + 90, opts.y + 25 + i * 15, "OUTPUT")
+        var s = new Socket(self, opts.x + 90, opts.y + 30 + i * 15, "OUTPUT", socket)
         self.sockets.output.push(s);
         self.set.push(s.pad);
+        self.set.push(s.label);
     })
     
     var height = Math.max(this.sockets.input.length, this.sockets.output.length);
-    this.border = R.rect(opts.x, opts.y, 100, 25 + height * 15, 5).attr({stroke: "#ccc", fill: "#333"});
-    this.header = R.rect(opts.x, opts.y, 100, 15, 5).attr({stroke: "#ccc", fill: "#ccc"});
+    this.border = R.rect(opts.x, opts.y, 100, 30 + height * 15, 5).attr({stroke: "#ccc", fill: "#333"});
+    this.header = R.rect(opts.x, opts.y, 100, 18, 5).attr({stroke: "#ccc", fill: "#ccc"});
+    this.headerText = R.text(opts.x + 50, opts.y+9, opts.name).attr({stroke: "#444", "font-family": "Monaco", "font-size": "11px"})
     
-    this.set.push(this.header, this.border)
+    this.set.push(this.header, this.border, this.headerText)
     
     this.header.toBack();
     this.border.toBack();
@@ -252,19 +268,59 @@ function Device(opts){
 }
 
 
-var a = new Device({
+
+var serial = new Device({
+    name: "Serial",
     x: 50,
     y: 50,
-    input: [{}, {}],
-    output: [{}, {}, {}, {}]
+    input: [{
+        name: "INPUT",
+        fun: function(data){
+            alert("Serial: " + data)
+        }
+    }],
+    output: [{name: "OUTPUT"}]
 })
 
-var b = new Device({
-    x: 200,
-    y: 100,
-    input: [{}, {}, {}, {}, {}, {}, {}],
-    output: [{}, {}, {}, {}]
+var piast = new Device({
+    name: "Piast",
+    x: 250,
+    y: 50,
+    input: [{
+        name: "INPUT",
+		fun: function(data){ 
+		    alert("piast: " + data) 
+		    piast.sockets.output[0].send(data)
+		}
+    }],
+    output: [
+        {name: "OUTPUT"}
+    ]
 })
+
+R.rect(10, 10, 20, 20, 5).attr({fill: "#f90"}).click(function(){
+    serial.sockets.output[0].send("1234")
+})
+
+
+
+
+
+// var a = new Device({
+//     x: 350,
+//     y: 350,
+//     input: [{}, {}],
+//     output: [{}, {}, {}, {}]
+// })
+// 
+// var b = new Device({
+//     x: 200,
+//     y: 100,
+//     input: [{}, {}, {}, {}, {}, {}, {}],
+//     output: [{}, {}, {}, {}]
+// })
+
+
 
 // a.sockets.input[0].connect(b.sockets.output[0])
 // a.sockets.input[1].connect(b.sockets.output[1])

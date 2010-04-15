@@ -7,6 +7,6 @@
 
 + (BOOL)isSelectorExcludedFromWebScript:(SEL)aSelector;
 + (BOOL)isKeyExcludedFromWebScript:(const char *)name;
-- (void)myMethod;
+- (void)log:(NSString *)data;
 
 @end

@@ -7,9 +7,9 @@
 
 +(BOOL)isKeyExcludedFromWebScript:(const char *)name { return NO; }
 
--(void)myMethod
+-(void)log:(NSString *)data
 {
-	NSLog(@"myMethod called from JavaScript");
+	NSLog(data);
 }
 
 @end
