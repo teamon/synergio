@@ -11,6 +11,13 @@ Array.prototype.find = function(fun){
     return null;
 }
 
+Array.prototype.remove = function(obj){
+    for (var i=0; i < this.length; i++) {
+        if(this[i] == obj) this.splice(i, 1);
+    }
+    return this;
+}
+
 Array.prototype.contains = function(obj){
     for (var i=0; i < this.length; i++) {
         if(this[i] == obj) return true;
@@ -104,11 +111,17 @@ function SocketConnection(obj1, obj2){
     }
     
     var d = this.calculatePathAndBullets();
-    
-    this.line = R.path(d[0]).attr({stroke: "#fff", fill: "none"});
+    this.path = d[0];    
+    this.line = R.path(d[0]).attr({stroke: "#fff", fill: "none", "stroke-width": 3});
     this.bulletFrom = R.circle(d[1], d[2], 2).attr({fill: "#fff", stroke: "none"});
     this.bulletTo = R.circle(d[3], d[4], 2).attr({fill: "#fff", stroke: "none"});
     
+    var self = this;
+    this.line.dblclick(function(){
+        console.log("remove line")
+        self.remove();
+    })
+
     this.update = function(){
         var d = this.calculatePathAndBullets();
         this.line.attr({path: d[0]});
@@ -117,12 +130,13 @@ function SocketConnection(obj1, obj2){
     }
     
     this.remove = function(){
+        this.from.disconnect(this.to)
         this.line.remove();
         this.bulletFrom.remove();
         this.bulletTo.remove();
+        S.connections.remove(this)
     }
 }
-
 
 function Socket(device, x, y, type){
     this.device = device;
@@ -164,13 +178,23 @@ function Socket(device, x, y, type){
         }
     }
     
+    this.disconnect = function(other){
+        var self = this
+        var con = S.connections.find(function(e){
+            return (e.from == self && e.to == other) || (e.from == other && e.to == self);
+        })
+        
+        this.connectedSockets.remove(other)
+        other.connectedSockets.remove(this)
+    }
+    
     this.disconnectAll = function(){
         var self = this;
         S.connections.forEach(function(con){
             if(con.from == self || con.to == self){
                 con.remove()
             }
-            //self.connectedSockets.removeAll();
+            self.connectedSockets = [];
         })
     }
     
@@ -236,17 +260,16 @@ var a = new Device({
 })
 
 var b = new Device({
-    x: 100,
-    y: 200,
+    x: 200,
+    y: 100,
     input: [{}, {}, {}, {}, {}, {}, {}],
     output: [{}, {}, {}, {}]
 })
 
-a.sockets.input[0].connect(b.sockets.output[0])
-
-a.sockets.input[1].connect(b.sockets.output[1])
-a.sockets.input[1].connect(b.sockets.output[2])
-a.sockets.input[1].connect(b.sockets.output[3])
+// a.sockets.input[0].connect(b.sockets.output[0])
+// a.sockets.input[1].connect(b.sockets.output[1])
+// a.sockets.input[1].connect(b.sockets.output[2])
+// a.sockets.input[1].connect(b.sockets.output[3])
 
 
 
@@ -261,15 +284,4 @@ a.sockets.input[1].connect(b.sockets.output[3])
 // =========
 
 }
-
-
-
-
-
-
-
-
-
-
-
 
