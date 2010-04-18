@@ -8,20 +8,21 @@
 
 /* Begin PBXBuildFile section */
 		1DDD58160DA1D0A300B32029 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1DDD58140DA1D0A300B32029 /* MainMenu.xib */; };
-		6FB335BE1178C31900CF4714 /* jquery-1.3.2.min.js in Sources */ = {isa = PBXBuildFile; fileRef = 6FB335BB1178C31900CF4714 /* jquery-1.3.2.min.js */; };
-		6FB335BF1178C31900CF4714 /* jquery-ui-1.7.2.custom.css in Resources */ = {isa = PBXBuildFile; fileRef = 6FB335BC1178C31900CF4714 /* jquery-ui-1.7.2.custom.css */; };
-		6FB335C01178C31900CF4714 /* jquery-ui-1.7.2.custom.min.js in Sources */ = {isa = PBXBuildFile; fileRef = 6FB335BD1178C31900CF4714 /* jquery-ui-1.7.2.custom.min.js */; };
-		6FB335C31178C33600CF4714 /* jquery-1.3.2.min.js in Resources */ = {isa = PBXBuildFile; fileRef = 6FB335BB1178C31900CF4714 /* jquery-1.3.2.min.js */; };
-		6FB335C41178C33600CF4714 /* jquery-ui-1.7.2.custom.min.js in Resources */ = {isa = PBXBuildFile; fileRef = 6FB335BD1178C31900CF4714 /* jquery-ui-1.7.2.custom.min.js */; };
+		6F15C55F117B7B5500C6F563 /* bg.png in Resources */ = {isa = PBXBuildFile; fileRef = 6F15C558117B7B5500C6F563 /* bg.png */; };
+		6F15C560117B7B5500C6F563 /* engine.css in Resources */ = {isa = PBXBuildFile; fileRef = 6F15C559117B7B5500C6F563 /* engine.css */; };
+		6F15C561117B7B5500C6F563 /* engine.js in Sources */ = {isa = PBXBuildFile; fileRef = 6F15C55A117B7B5500C6F563 /* engine.js */; };
+		6F15C562117B7B5500C6F563 /* jquery.js in Sources */ = {isa = PBXBuildFile; fileRef = 6F15C55B117B7B5500C6F563 /* jquery.js */; };
+		6F15C563117B7B5500C6F563 /* main.html in Resources */ = {isa = PBXBuildFile; fileRef = 6F15C55C117B7B5500C6F563 /* main.html */; };
+		6F15C564117B7B5500C6F563 /* raphael.js in Sources */ = {isa = PBXBuildFile; fileRef = 6F15C55D117B7B5500C6F563 /* raphael.js */; };
+		6F15C565117B7B5500C6F563 /* raphaelle.js in Sources */ = {isa = PBXBuildFile; fileRef = 6F15C55E117B7B5500C6F563 /* raphaelle.js */; };
+		6F15C569117B7B5E00C6F563 /* engine.js in Resources */ = {isa = PBXBuildFile; fileRef = 6F15C55A117B7B5500C6F563 /* engine.js */; };
+		6F15C56A117B7B5E00C6F563 /* jquery.js in Resources */ = {isa = PBXBuildFile; fileRef = 6F15C55B117B7B5500C6F563 /* jquery.js */; };
+		6F15C56B117B7B5E00C6F563 /* raphael.js in Resources */ = {isa = PBXBuildFile; fileRef = 6F15C55D117B7B5500C6F563 /* raphael.js */; };
+		6F15C56C117B7B5E00C6F563 /* raphaelle.js in Resources */ = {isa = PBXBuildFile; fileRef = 6F15C55E117B7B5500C6F563 /* raphaelle.js */; };
 		6FB8106C1177427A00E5B634 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6FB8106B1177427A00E5B634 /* WebKit.framework */; };
 		6FB8107A1177432300E5B634 /* MainView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FB810791177432300E5B634 /* MainView.m */; };
 		6FB8107D117743FB00E5B634 /* Synergio.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FB8107C117743FB00E5B634 /* Synergio.m */; };
-		6FB810851177452B00E5B634 /* main.html in Resources */ = {isa = PBXBuildFile; fileRef = 6FB810841177452B00E5B634 /* main.html */; };
-		6FB810871177454000E5B634 /* app.js in Sources */ = {isa = PBXBuildFile; fileRef = 6FB810861177454000E5B634 /* app.js */; };
-		6FB810881177456500E5B634 /* app.js in Resources */ = {isa = PBXBuildFile; fileRef = 6FB810861177454000E5B634 /* app.js */; };
 		6FB810CF117746AA00E5B634 /* AppController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FB810CE117746AA00E5B634 /* AppController.m */; };
-		6FB813901177559C00E5B634 /* raphael.js in Sources */ = {isa = PBXBuildFile; fileRef = 6FB8138F1177559C00E5B634 /* raphael.js */; };
-		6FB81398117755A300E5B634 /* raphael.js in Resources */ = {isa = PBXBuildFile; fileRef = 6FB8138F1177559C00E5B634 /* raphael.js */; };
 		8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C165CFE840E0CC02AAC07 /* InfoPlist.strings */; };
 		8D11072D0486CEB800E47090 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; settings = {ATTRIBUTES = (); }; };
 		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
@@ -36,19 +37,20 @@
 		29B97316FDCFA39411CA2CEA /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		29B97324FDCFA39411CA2CEA /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
 		29B97325FDCFA39411CA2CEA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
-		6FB335BB1178C31900CF4714 /* jquery-1.3.2.min.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = "jquery-1.3.2.min.js"; sourceTree = "<group>"; };
-		6FB335BC1178C31900CF4714 /* jquery-ui-1.7.2.custom.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; path = "jquery-ui-1.7.2.custom.css"; sourceTree = "<group>"; };
-		6FB335BD1178C31900CF4714 /* jquery-ui-1.7.2.custom.min.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = "jquery-ui-1.7.2.custom.min.js"; sourceTree = "<group>"; };
+		6F15C558117B7B5500C6F563 /* bg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = bg.png; path = resources/bg.png; sourceTree = "<group>"; };
+		6F15C559117B7B5500C6F563 /* engine.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; name = engine.css; path = resources/engine.css; sourceTree = "<group>"; };
+		6F15C55A117B7B5500C6F563 /* engine.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = engine.js; path = resources/engine.js; sourceTree = "<group>"; };
+		6F15C55B117B7B5500C6F563 /* jquery.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = jquery.js; path = resources/jquery.js; sourceTree = "<group>"; };
+		6F15C55C117B7B5500C6F563 /* main.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = main.html; path = resources/main.html; sourceTree = "<group>"; };
+		6F15C55D117B7B5500C6F563 /* raphael.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = raphael.js; path = resources/raphael.js; sourceTree = "<group>"; };
+		6F15C55E117B7B5500C6F563 /* raphaelle.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = raphaelle.js; path = resources/raphaelle.js; sourceTree = "<group>"; };
 		6FB8106B1177427A00E5B634 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
 		6FB810781177432300E5B634 /* MainView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainView.h; sourceTree = "<group>"; };
 		6FB810791177432300E5B634 /* MainView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MainView.m; sourceTree = "<group>"; };
 		6FB8107B117743FB00E5B634 /* Synergio.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Synergio.h; sourceTree = "<group>"; };
 		6FB8107C117743FB00E5B634 /* Synergio.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Synergio.m; sourceTree = "<group>"; };
-		6FB810841177452B00E5B634 /* main.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = main.html; sourceTree = "<group>"; };
-		6FB810861177454000E5B634 /* app.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = app.js; sourceTree = "<group>"; };
 		6FB810CD117746AA00E5B634 /* AppController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppController.h; sourceTree = "<group>"; };
 		6FB810CE117746AA00E5B634 /* AppController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppController.m; sourceTree = "<group>"; };
-		6FB8138F1177559C00E5B634 /* raphael.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = raphael.js; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* synergio-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "synergio-Info.plist"; sourceTree = "<group>"; };
 		8D1107320486CEB800E47090 /* synergio.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = synergio.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -130,15 +132,16 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				6FB335BB1178C31900CF4714 /* jquery-1.3.2.min.js */,
-				6FB335BC1178C31900CF4714 /* jquery-ui-1.7.2.custom.css */,
-				6FB335BD1178C31900CF4714 /* jquery-ui-1.7.2.custom.min.js */,
-				6FB810861177454000E5B634 /* app.js */,
-				6FB8138F1177559C00E5B634 /* raphael.js */,
+				6F15C558117B7B5500C6F563 /* bg.png */,
+				6F15C559117B7B5500C6F563 /* engine.css */,
+				6F15C55A117B7B5500C6F563 /* engine.js */,
+				6F15C55B117B7B5500C6F563 /* jquery.js */,
+				6F15C55C117B7B5500C6F563 /* main.html */,
+				6F15C55D117B7B5500C6F563 /* raphael.js */,
+				6F15C55E117B7B5500C6F563 /* raphaelle.js */,
 				8D1107310486CEB800E47090 /* synergio-Info.plist */,
 				089C165CFE840E0CC02AAC07 /* InfoPlist.strings */,
 				1DDD58140DA1D0A300B32029 /* MainMenu.xib */,
-				6FB810841177452B00E5B634 /* main.html */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -195,14 +198,15 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6FB335C31178C33600CF4714 /* jquery-1.3.2.min.js in Resources */,
-				6FB335C41178C33600CF4714 /* jquery-ui-1.7.2.custom.min.js in Resources */,
-				6FB810881177456500E5B634 /* app.js in Resources */,
-				6FB81398117755A300E5B634 /* raphael.js in Resources */,
+				6F15C569117B7B5E00C6F563 /* engine.js in Resources */,
+				6F15C56A117B7B5E00C6F563 /* jquery.js in Resources */,
+				6F15C56B117B7B5E00C6F563 /* raphael.js in Resources */,
+				6F15C56C117B7B5E00C6F563 /* raphaelle.js in Resources */,
 				8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */,
 				1DDD58160DA1D0A300B32029 /* MainMenu.xib in Resources */,
-				6FB810851177452B00E5B634 /* main.html in Resources */,
-				6FB335BF1178C31900CF4714 /* jquery-ui-1.7.2.custom.css in Resources */,
+				6F15C55F117B7B5500C6F563 /* bg.png in Resources */,
+				6F15C560117B7B5500C6F563 /* engine.css in Resources */,
+				6F15C563117B7B5500C6F563 /* main.html in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -217,10 +221,10 @@
 				6FB810CF117746AA00E5B634 /* AppController.m in Sources */,
 				6FB8107A1177432300E5B634 /* MainView.m in Sources */,
 				6FB8107D117743FB00E5B634 /* Synergio.m in Sources */,
-				6FB810871177454000E5B634 /* app.js in Sources */,
-				6FB813901177559C00E5B634 /* raphael.js in Sources */,
-				6FB335BE1178C31900CF4714 /* jquery-1.3.2.min.js in Sources */,
-				6FB335C01178C31900CF4714 /* jquery-ui-1.7.2.custom.min.js in Sources */,
+				6F15C561117B7B5500C6F563 /* engine.js in Sources */,
+				6F15C562117B7B5500C6F563 /* jquery.js in Sources */,
+				6F15C564117B7B5500C6F563 /* raphael.js in Sources */,
+				6F15C565117B7B5500C6F563 /* raphaelle.js in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

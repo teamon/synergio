@@ -298,7 +298,13 @@ window.onload = function(){
     var log = Synergio.addDevice({
         name: "Log",
         inputs: [
-            {name: "Console", fun: function(data){ console.log(data) } }
+            {name: "Console", fun: function(data){ 
+                console.log(data)
+                if($("#log div").length > 30){
+                    $("#log div").eq(0).remove()
+                }
+                $("#log").append("<div>" + data + "</div>")
+            } }
         ],
         coords: [250, 50]
     })
