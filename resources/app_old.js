@@ -25,6 +25,31 @@ Array.prototype.contains = function(obj){
     return false;
 }
 
+Raphael.fn.slider = function(x, y, min, max){
+    var s = this.set();
+    s.min = min;
+    s.max = max;
+    
+    s.rect = R.rect(x, y, 10, 150, 5).attr({fill: "#555"})
+    s.knob = R.circle(x+5, y+70, 6, 6).attr({fill: "#f00", stroke: "#fff"})
+    s.knob.mousedown(function(e){
+        S.isDrag = {
+            dx: e.clientX,
+            dy: e.clientY,
+            item: s.knob,
+            orientation: "vertical",
+            yMin: y,
+            yMax: y+100
+        }
+        e.preventDefault && e.preventDefault();
+    })
+    
+    
+    
+    s.push(s.rect)
+    s.push(s.knob)
+    return s;
+}
 
 var R = Raphael("holder", 640, 480);
 
@@ -34,12 +59,44 @@ var S = {
     devices: []
 }
 
+
+
+
+
 // drag & drop
 
 document.onmousemove = function (e) {
     e = e || window.event;
     if (S.isDrag) {
-        S.isDrag.item.translate(e.clientX - S.isDrag.dx, e.clientY - S.isDrag.dy);
+        var tx = (S.isDrag.orientation && S.isDrag.orientation == "vertical") ? 0 : e.clientX - S.isDrag.dx
+        var ty = (S.isDrag.orientation && S.isDrag.orientation == "horizontal") ? 0 : e.clientY - S.isDrag.dy
+        
+        console.log(S.isDrag.dy)
+        
+        // if(S.isDrag.x){
+        //     S.isDrag.x.current += tx
+        //     if(S.isDrag.x.current > S.isDrag.x.max){
+        //         tx = S.isDrag.x.current - S.isDrag.x.max;
+        //         S.isDrag.x.current = S.isDrag.x.max
+        //     } else if(S.isDrag.x.current < S.isDrag.x.min){
+        //         tx = S.isDrag.x.min - S.isDrag.x.current;
+        //         S.isDrag.x.current = S.isDrag.x.min
+        //     }
+        // } 
+        // 
+        // if(S.isDrag.y){
+        //     S.isDrag.y.current += tx
+        //     if(S.isDrag.y.current > S.isDrag.y.max){
+        //         ty = S.isDrag.y.current - S.isDrag.y.max;
+        //         S.isDrag.y.current = S.isDrag.y.max
+        //     } else if(S.isDrag.y.current < S.isDrag.y.min){
+        //         ty = S.isDrag.y.min - S.isDrag.y.current;
+        //         S.isDrag.y.current = S.isDrag.y.min
+        //     }
+        // }
+        
+        S.isDrag.item.translate(tx, ty);
+        
         // refresh connections
         S.connections.forEach(function(con){ con.update() })
         
@@ -79,6 +136,7 @@ document.onmouseup = function(e){
         S.isDrag.to.remove();
     }
     S.isDrag = false;
+    e.preventDefault && e.preventDefault();
 }
 
 
@@ -116,6 +174,12 @@ function SocketConnection(obj1, obj2){
     this.line.dblclick(function(){
         self.remove();
     })
+	
+	this.line.hover(function(){
+		this.attr({stroke:"#ff0"});
+	}, function(){
+		this.attr({stroke:"#fff"})
+	})
 
     this.update = function(){
         var d = this.calculatePathAndBullets();
@@ -241,8 +305,8 @@ function Device(opts){
         self.set.push(s.label);
     })
     
-    var height = Math.max(this.sockets.input.length, this.sockets.output.length);
-    this.border = R.rect(opts.x, opts.y, 100, 30 + height * 15, 5).attr({stroke: "#ccc", fill: "#333"});
+    var size = opts.size || Math.max(this.sockets.input.length, this.sockets.output.length);
+    this.border = R.rect(opts.x, opts.y, 100, 30 + size * 15, 5).attr({stroke: "#ccc", fill: "#333"});
     this.header = R.rect(opts.x, opts.y, 100, 18, 5).attr({stroke: "#ccc", fill: "#ccc"});
     this.headerText = R.text(opts.x + 50, opts.y+9, opts.name).attr({stroke: "#444", "font-family": "Monaco", "font-size": "11px"})
     
@@ -262,6 +326,7 @@ function Device(opts){
     
     this.header.mouseup(function(e){
         S.isDrag = false;
+        e.preventDefault && e.preventDefault();
     })
     
     S.devices.push(this)
@@ -298,13 +363,67 @@ var piast = new Device({
     ]
 })
 
-R.rect(10, 10, 20, 20, 5).attr({fill: "#f90"}).click(function(){
-    serial.sockets.output[0].send("1234")
+var debug = new Device({
+    name: "Debug",
+    x: 250,
+    y: 150,
+    input: [{
+        name: "INPUT",
+		fun: function(data){ 
+            if(debug.value){
+                debug.value.remove();
+            }
+            debug.value = R.text(debug.header.attrs.x + 50, debug.header.attrs.y + 30, data).attr({stroke: "#fff", "font-family": "Monaco", "font-size": "11px"})
+		    debug.set.push(debug.value)
+		}
+    }],
+    output: []
 })
 
+//
+//var slider = new Device({
+//    name: "Slider",
+//    x: 50,
+//    y: 150,
+//    input: [],
+//    output: [{
+//        name: "VALUE"
+//    }],
+//    size: 11
+//})
+
+
+//R.slider(200, 200, 0, 100)
 
 
 
+
+// slider.s = R.rect(0, 0, 0, 0)
+// slider.set.push(slider.s)
+// 
+// slider.s.v = $("#slider-vertical").slider({
+//     orientation: "vertical",
+//     range: "min",
+//     min: 0,
+//     max: 100,
+//     value: 60,
+//     slide: function(event, ui){
+//         console.log(ui.value)
+//         slider.sockets.output[0].send(ui.value)
+//     }
+// }).css("left", slider.header.attrs.x + 40 + "px").css("top", slider.header.attrs.y + 30 + "px")
+// slider.s.translate = function(x,y){
+//     slider.s.v.css("top", parseInt(slider.s.v.css("top")) + y + "px")
+//     slider.s.v.css("left", parseInt(slider.s.v.css("left")) + x + "px")
+// }
+
+
+
+var j=0;
+//R.rect(10, 10, 20, 20, 5).attr({fill: "#f90"}).click(function(e){
+//    serial.sockets.output[0].send(1234 + j++)
+//    e.preventDefault && e.preventDefault()
+//})
 
 // var a = new Device({
 //     x: 350,

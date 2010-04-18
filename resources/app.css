@@ -1,0 +1,58 @@
+* { margin: 0; padding: 0; }
+body { 
+  background: rgb(37, 116, 176) url(bg.png) left top;
+  font-family: Menlo;
+  font-size: 8pt;
+}
+
+#holder {
+  width: 640px;
+  height: 480px;
+  border-right: 1px solid #fff;
+  border-bottom: 1px solid #fff;
+}
+#holder {
+  width: 640px;
+  height: 480px;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+/* device */
+div.device {
+    width: 100px;
+    border: 1px solid #fff;
+    opacity: 0.9;
+    -webkit-border-radius: 5px;
+    overflow: hidden;
+}
+div.device div.header {
+    cursor: move;
+    background-color: #fff;
+    color: #222;
+    padding: 3px 0;
+    text-align: center;
+}
+
+div.inputs {
+    width: 22px;
+    float: left;
+}
+div.outputs {
+    width: 22px;
+    float: right;
+}
+
+div.socket {
+   width: 8px; 
+   height: 8px;
+   -webkit-border-radius: 8px;
+   border: 2px solid black;
+   margin: 5px;
+}
+
+div.socket-input   { border-color: #fff; }
+div.socket-output  { border-color: #000; }
+div.socket-connect { border-color: #0f0; }
+div.socket-hover   { border-color: #f90; background-color: "#00f";}
