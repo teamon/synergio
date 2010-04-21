@@ -274,20 +274,6 @@ var Synergio = {
 var Devices = {};
 var Presets = {};
 
-// Documentation
-//
-// Creating own device
-//
-// function MyDevice(opts){
-//     var device = Synergio.Device(opts);
-//     // customize object
-//     // ...
-//     
-//     return device;
-// }
-// 
-// var myItem = MyDevice(opts);
-    
 Devices.SerialMock = function(opts){
     var device = Synergio.Device({
         name: "SerialMock",
@@ -302,7 +288,6 @@ Devices.SerialMock = function(opts){
     
     return device;
 }
-
     
 Devices.Serial = function(opts){
     var device = Synergio.Device({
