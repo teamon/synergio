@@ -74,6 +74,7 @@ var Synergio = {
             obj.draggable()
             obj.dragUpdate = function(dragging_over, dx, dy, event){
                 device.set.translate(dx, dy)
+                if(device.onDragUpdate) device.onDragUpdate(dragging_over, dx, dy, event)
                 device.inputs.forEach( function(socket){ socket.updateConnections() })
                 device.outputs.forEach(function(socket){ socket.updateConnections() })
             }
@@ -455,17 +456,39 @@ Devices.Graph = function(opts){
     return device;
 }
 
+Devices.Slider = function(opts){
+    var device = Synergio.Device({
+        name: "Slider",
+        outputs: [{name: "Value"}],
+        height: 140
+    }.merge(opts))
+    
+    device.onDragUpdate = function(dragging_over, dx, dy, event){
+        device.slider.css("left", device.header.attrs.x+30).css("top" , device.header.attrs.y + 30)
+    }
+    
+    device.slider = $("<input type=range min=0 max=100>").appendTo($("#holder")).change(function(h){
+        device.outputs[0].send(this.value)
+    })
+    device.onDragUpdate()
+
+        
+    
+    
+    return device;
+}
 
 Presets.JoystickSerial = function(){
-    var counter  = Devices.SerialMock({coords: [40, 120]})
-    var log      = Devices.Log({coords: [240, 160]})
-    var serial   = Devices.Serial({coords: [140, 40]})
-    var sendExcl = Devices.SendButton({what: "!", coords: [40, 40]})
-    var joy      = Devices.Joystick({coords: [240, 40]})
+    var counter  = Devices.SerialMock({coords: [20, 120]})
+    var log      = Devices.Log({coords: [220, 160]})
+    var serial   = Devices.Serial({coords: [120, 40]})
+    var sendExcl = Devices.SendButton({what: "!", coords: [20, 40]})
+    var joy      = Devices.Joystick({coords: [220, 40]})
+    var slider   = Devices.Slider({coords: [20, 180]})
 
     var axels = [];
     for(var i=0; i<3; i++){
-        axels[i] = Devices.Graph({name: "Axis " + i, coords: [340, 180*i + 40]})
+        axels[i] = Devices.Graph({name: "Axis " + i, coords: [320, 180*i + 40]})
         joy.outputs[i].connectWith(axels[i].inputs[0])
     }
     
@@ -473,7 +496,7 @@ Presets.JoystickSerial = function(){
     sendExcl.outputs[0].connectWith(log.inputs[0])
     serial.outputs[0].connectWith(joy.inputs[0])
     serial.outputs[0].connectWith(log.inputs[0])
-    counter.outputs[0].connectWith(joy.inputs[0])
+    //counter.outputs[0].connectWith(joy.inputs[0])
     
     processSerialPortInput = function(msg){ serial.outputs[0].send(msg) }
 }
