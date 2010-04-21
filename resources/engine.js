@@ -38,7 +38,9 @@ var Synergio = {
             name: opts.name,
             inputs: [],
             outputs: [],
-            set: Synergio.R.set()
+            set: Synergio.R.set(),
+            width: opts.width || 80,
+            height: opts.height
         }
 
         if(opts.inputs){
@@ -58,12 +60,14 @@ var Synergio = {
                 sock.pad.translate(Synergio.width-10, 30+i*15)
             })
         }
+        
+        var width = opts.width || Synergio.width
 
-        var height = 25 + Math.max(device.inputs.length, device.outputs.length)*15
+        var height = opts.height || 25 + Math.max(device.inputs.length, device.outputs.length)*15
 
-        device.border = Synergio.R.rect(0, 0, Synergio.width, height, 5).attr({stroke: "#fff"})
-        device.header = Synergio.R.rect(0, 0, Synergio.width, 20, 5).attr({stroke: "#fff", fill: "#fff", "fill-opacity": 0.3})
-        device.name   = Synergio.R.text(Synergio.width/2, 10, device.name).attr({"stroke-width": 0, fill: "#fff", "font-family": "Lucida Grande", "font-size": "11pt", "font-style": "normal"})
+        device.border = Synergio.R.rect(0, 0, width, height, 5).attr({stroke: "#fff"})
+        device.header = Synergio.R.rect(0, 0, width, 20, 5).attr({stroke: "#fff", fill: "#fff", "fill-opacity": 0.3})
+        device.name   = Synergio.R.text(width/2, 10, device.name).attr({"stroke-width": 0, fill: "#fff", "font-family": "Lucida Grande", "font-size": "11pt", "font-style": "normal"})
         device.set.push(device.border, device.header, device.name)
 
         function makeDraggable(obj){
@@ -87,6 +91,7 @@ var Synergio = {
     
     SocketConnection: function(obj1, obj2){
         var self = {};
+        self.hovered = false;
         self.obj1 = obj1;
         self.obj2 = obj2;
 
@@ -112,7 +117,7 @@ var Synergio = {
 
         var d = self.calculatePathAndBullets();
         self.path = d[0];    
-        self.line = Synergio.R.path(d[0]).attr({stroke: "#fff", fill: "none", "stroke-width": 3});
+        self.line = Synergio.R.path(d[0]).attr({stroke: "#fff", fill: "none", "stroke-width": 3, "stroke-opacity": 0.5});
         self.bullet1 = Synergio.R.circle(d[1], d[2], 2).attr({fill: "#fff", stroke: "none"});
         self.bullet2 = Synergio.R.circle(d[3], d[4], 2).attr({fill: "#fff", stroke: "none"});
 
@@ -122,8 +127,10 @@ var Synergio = {
         })
 
         self.line.hover(function(){
+            self.hovered = true
             this.attr({stroke:"#ff0"});
         }, function(){
+            self.hovered = false
             this.attr({stroke:"#fff"})
         })
 
@@ -147,10 +154,15 @@ var Synergio = {
         
         self.doSend = function(to, data){
             to.fun(data)
-            self.line.attr({stroke: "#f00"})
-            setTimeout(function(){
-                self.line.attr({stroke: "#fff"})
-            }, 100)
+            if(!self.hovered){
+                self.line.attr({stroke: "#f00"})
+                setTimeout(function(){
+                    self.line.attr({stroke: "#fff"})
+                }, 100)
+            } else {
+                self.line.attr({stroke:"#ff0"});
+            }
+
         }
         
         return self;
@@ -281,8 +293,8 @@ Devices.SerialMock = function(opts){
     }.merge(opts))
 
     function cnt(){
-        for(var i=0; i<3; i++) device.outputs[0].send("J" + i + "=" + parseInt(Math.random()*200 - 100) + "\n")
-        setTimeout(cnt, 500)
+        for(var i=0; i<3; i++) device.outputs[0].send("J" + i + "=" + parseInt(Math.random()*100) + "\n")
+        setTimeout(cnt, 100)
     }
     cnt()
     
@@ -372,7 +384,8 @@ Devices.Log = function(opts){
         name: "Log",
         inputs: [
             {
-                name: "Console", fun: function(data){ 
+                name: "Console", 
+                fun: function(data){ 
                     if($("#log div").length > 30){
                         $("#log div").eq(0).remove()
                     }
@@ -385,6 +398,62 @@ Devices.Log = function(opts){
     return device;
 }
 
+Devices.Graph = function(opts){
+    var device = Synergio.Device({
+        name: "Graph",
+        inputs: [
+            {
+                name: "IN", 
+                fun: function(data){ 
+                    device.graph.addData(data, 0)
+                }
+            },
+            {
+                name: "IN", 
+                fun: function(data){ 
+                    device.graph.addData(data, 1)
+                }
+            }
+        ],
+        height: 160,
+        width: 300
+    }.merge(opts))
+    
+    device.graph = {
+        data: [[],[]],
+        path: [{},{}],
+        
+        height: device.height - 30,
+        width: device.width - 25,
+        
+        _w: (device.width - 25) / 35,
+        
+        addData: function(data, n){
+            if(this.data[n].length >= 35){
+                this.data[n].splice(0,1)
+            }
+            
+            if(this.path[n].remove) this.path[n].remove();
+            
+            this.data[n][this.data[n].length] = parseInt(data);
+            // repaint
+            path = "M" + [0, device.height]
+            for(var i=0; i<this.data[n].length; i++){
+                path += "L" + [this._w*i, device.height - (this.data[n][i] * this.height / 100)]
+            }
+            path += "L" + [this.data[n].length*this._w, device.height]
+            
+            this.path[n] = Synergio.R.path(path).translate(device.header.attrs.x + 20, device.header.attrs.y-5).attr({stroke: "#fff", fill: "#fff", "fill-opacity": 0.3})
+            device.set.push(this.path[n])
+        }
+    }
+    
+    device.set.push(device.graph.bg)
+
+    
+    
+    return device;
+}
 
 
 Presets.JoystickSerial = function(){
@@ -396,7 +465,7 @@ Presets.JoystickSerial = function(){
 
     var axels = [];
     for(var i=0; i<3; i++){
-        axels[i] = Devices.Debug({name: "Axis " + i, coords: [340, 60*i + 40]})
+        axels[i] = Devices.Graph({name: "Axis " + i, coords: [340, 180*i + 40]})
         joy.outputs[i].connectWith(axels[i].inputs[0])
     }
     
@@ -404,6 +473,7 @@ Presets.JoystickSerial = function(){
     sendExcl.outputs[0].connectWith(log.inputs[0])
     serial.outputs[0].connectWith(joy.inputs[0])
     serial.outputs[0].connectWith(log.inputs[0])
+    counter.outputs[0].connectWith(joy.inputs[0])
     
     processSerialPortInput = function(msg){ serial.outputs[0].send(msg) }
 }
