@@ -1,3 +1,5 @@
+// Array extensions
+
 Array.prototype.remove = function(fun){
     for (var i=0; i < this.length; i++) {
         if(fun(this[i])) this.splice(i, 1);
@@ -12,55 +14,58 @@ Array.prototype.find = function(fun){
     return null;
 }
 
-var serialPort;
-
-function processSerialPortInput(msg){
-    //console.log("got " + msg)
-    if(serialPort) serialPort.outputs[0].send(msg)
+Object.prototype.merge = function(other){
+    res = {};
+    for(var p in this) res[p] = this[p];
+    for(var p in other) res[p] = other[p];
+    return res;
 }
 
-window.onload = function(){
+var Synergio = {
+    width: 80,
+    init: function(){
+        Synergio.R = Raphael("holder", 640, 480)
+    },
     
-    Synergio = {
-        R: Raphael("holder", 640, 480),
-        devices: []
-    }
-        
-    var width = 80;
-
-    Synergio.addDevice = function(opts){
+    loadPreset: function(name){
+        Presets[name]()
+    },
+    
+    devices: [],
+    
+    Device: function (opts){
         var device = {
             name: opts.name,
             inputs: [],
             outputs: [],
             set: Synergio.R.set()
         }
-    
+
         if(opts.inputs){
             opts.inputs.forEach(function(e, i){
-                var sock = new Socket(device, e.name, "INPUT", e.fun)
+                var sock = Synergio.Socket(device, e.name, "INPUT", e.fun)
                 device.inputs.push(sock)
                 device.set.push(sock.pad)
                 sock.pad.translate(10, 30+i*15)
             })
         }
-    
+
         if(opts.outputs){
             opts.outputs.forEach(function(e, i){
-                var sock = new Socket(device, e.name, "OUTPUT", e.fun)
+                var sock = Synergio.Socket(device, e.name, "OUTPUT", e.fun)
                 device.outputs.push(sock)
                 device.set.push(sock.pad)
-                sock.pad.translate(width-10, 30+i*15)
+                sock.pad.translate(Synergio.width-10, 30+i*15)
             })
         }
-    
+
         var height = 25 + Math.max(device.inputs.length, device.outputs.length)*15
-    
-        device.border = Synergio.R.rect(0, 0, width, height, 5).attr({stroke: "#fff"})
-        device.header = Synergio.R.rect(0, 0, width, 20, 5).attr({stroke: "#fff", fill: "#fff", "fill-opacity": 0.3})
-        device.name   = Synergio.R.text(width/2, 10, device.name).attr({"stroke-width": 0, fill: "#fff", "font-family": "Lucida Grande", "font-size": "11pt", "font-style": "normal"})
+
+        device.border = Synergio.R.rect(0, 0, Synergio.width, height, 5).attr({stroke: "#fff"})
+        device.header = Synergio.R.rect(0, 0, Synergio.width, 20, 5).attr({stroke: "#fff", fill: "#fff", "fill-opacity": 0.3})
+        device.name   = Synergio.R.text(Synergio.width/2, 10, device.name).attr({"stroke-width": 0, fill: "#fff", "font-family": "Lucida Grande", "font-size": "11pt", "font-style": "normal"})
         device.set.push(device.border, device.header, device.name)
-    
+
         function makeDraggable(obj){
             obj.draggable()
             obj.dragUpdate = function(dragging_over, dx, dy, event){
@@ -71,24 +76,24 @@ window.onload = function(){
         }
         makeDraggable(device.header)
         makeDraggable(device.name)
-    
+
         if(opts.coords){
             device.set.translate(opts.coords[0], opts.coords[1])
         }
-    
+
         Synergio.devices.push(device);
         return device;
-    }
+    },
     
-    function SocketConnection(obj1, obj2){
-        var self = this;
-        this.obj1 = obj1;
-        this.obj2 = obj2;
+    SocketConnection: function(obj1, obj2){
+        var self = {};
+        self.obj1 = obj1;
+        self.obj2 = obj2;
 
         // Return [path, x1, y1, x4, y4]
-        this.calculatePathAndBullets = function(){                        
-            var bb1 = this.obj1.pad.getBBox();
-            var bb2 = this.obj2.pad.getBBox();
+        self.calculatePathAndBullets = function(){                        
+            var bb1 = self.obj1.pad.getBBox();
+            var bb2 = self.obj2.pad.getBBox();
     
             var x1 = bb1.x + bb1.width / 2
             var y1 = bb1.y + bb1.height / 2
@@ -105,59 +110,59 @@ window.onload = function(){
             return [path, x1, y1, x4, y4];
         }
 
-        var d = this.calculatePathAndBullets();
-        this.path = d[0];    
-        this.line = Synergio.R.path(d[0]).attr({stroke: "#fff", fill: "none", "stroke-width": 3});
-        this.bullet1 = Synergio.R.circle(d[1], d[2], 2).attr({fill: "#fff", stroke: "none"});
-        this.bullet2 = Synergio.R.circle(d[3], d[4], 2).attr({fill: "#fff", stroke: "none"});
+        var d = self.calculatePathAndBullets();
+        self.path = d[0];    
+        self.line = Synergio.R.path(d[0]).attr({stroke: "#fff", fill: "none", "stroke-width": 3});
+        self.bullet1 = Synergio.R.circle(d[1], d[2], 2).attr({fill: "#fff", stroke: "none"});
+        self.bullet2 = Synergio.R.circle(d[3], d[4], 2).attr({fill: "#fff", stroke: "none"});
 
-        var self = this;
-        this.line.dblclick(function(){
+        self.line.dblclick(function(){
             self.obj1.disconnectFrom(self.obj2)
             self.remove();
         })
 
-        this.line.hover(function(){
+        self.line.hover(function(){
             this.attr({stroke:"#ff0"});
         }, function(){
             this.attr({stroke:"#fff"})
         })
 
-        this.update = function(){
+        self.update = function(){
             var d = this.calculatePathAndBullets();
-            this.line.attr({path: d[0]});
-            this.bullet1.attr({cx: d[1], cy: d[2]});
-            this.bullet2.attr({cx: d[3], cy: d[4]});
+            self.line.attr({path: d[0]});
+            self.bullet1.attr({cx: d[1], cy: d[2]});
+            self.bullet2.attr({cx: d[3], cy: d[4]});
         }
 
-        this.remove = function(){
-            this.line.remove();
-            this.bullet2.remove();
-            this.bullet1.remove();
+        self.remove = function(){
+            self.line.remove();
+            self.bullet2.remove();
+            self.bullet1.remove();
         }
         
-        this.send = function(from, data){
-            if(this.obj1 == from && this.obj2.type == "INPUT") this.doSend(this.obj2, data)
-            else if(this.obj2 == from && this.obj1.type == "INPUT") this.doSend(this.obj1, data)
+        self.send = function(from, data){
+            if(self.obj1 == from && self.obj2.type == "INPUT") self.doSend(self.obj2, data)
+            else if(self.obj2 == from && self.obj1.type == "INPUT") self.doSend(self.obj1, data)
         }
         
-        this.doSend = function(to, data){
+        self.doSend = function(to, data){
             to.fun(data)
-            this.line.attr({stroke: "#f00"})
+            self.line.attr({stroke: "#f00"})
             setTimeout(function(){
                 self.line.attr({stroke: "#fff"})
             }, 100)
         }
-    }
-    
-    function Socket(device, name, type, fun){
-        var self = this;
-        this.device = device;
-        this.name = name;
-        this.type = type;
-        this.fun = fun;
-
         
+        return self;
+    },
+    
+    Socket: function(device, name, type, fun){
+        var self = {};
+        self.device = device;
+        self.name = name;
+        self.type = type;
+        self.fun = fun;
+ 
         function createPad(){
             var pad = Synergio.R.circle(0, 0, 4).attr({stroke: "#fff", fill: "#fff", "fill-opacity": 0.0});
             pad.socket = self;
@@ -174,7 +179,7 @@ window.onload = function(){
                 var p,m;
                 pad.draggable()
                 pad.dragStart = function(x, y, mousedownevent, mousemoveevent){
-                    m = new Socket("mouse", "mouse")
+                    m = Synergio.Socket("mouse", "mouse")
                     m.pad.remove();
                     m.pad = pad;
                     
@@ -227,16 +232,17 @@ window.onload = function(){
             return pad;
         }
         
-        this.pad = createPad();
+        self.pad = createPad();
         
-        this.connections = [];
-        this.connectWith = function(that){
-            var conn = new SocketConnection(this, that)
-            this.connections.push(conn)
+        self.connections = [];
+        
+        self.connectWith = function(that){
+            var conn = Synergio.SocketConnection(self, that)
+            self.connections.push(conn)
             that.connections.push(conn)
         }
         
-        this.disconnectFrom = function(that){
+        self.disconnectFrom = function(that){
             var pred = function(conn){
                 if((conn.obj1 == self && conn.obj2 == that) || (conn.obj1 == that && conn.obj2 == self)){
                     conn.remove(); 
@@ -245,64 +251,61 @@ window.onload = function(){
                     return false;
                 }
             }
-            this.connections.remove(pred)
-            that.connections.remove(pred)
+            self.connections.remove(pred)
+            self.connections.remove(pred)
         }
         
-        this.updateConnections = function(){
-            this.connections.forEach(function(conn){ conn.update() })
+        self.updateConnections = function(){
+            self.connections.forEach(function(conn){ conn.update() })
         }
         
-        
-        this.send = function(data){
+        self.send = function(data){
             self.connections.forEach(function(conn){
                 conn.send(self, data)
             })
         }
+        
+        return self;
     }
+    
+};
+
+
+var Devices = {};
+var Presets = {};
+
+// Documentation
+//
+// Creating own device
+//
+// function MyDevice(opts){
+//     var device = Synergio.Device(opts);
+//     // customize object
+//     // ...
+//     
+//     return device;
+// }
+// 
+// var myItem = MyDevice(opts);
+    
+Devices.SerialMock = function(opts){
+    var device = Synergio.Device({
+        name: "SerialMock",
+        outputs: [{name: "OUT"}]
+    }.merge(opts))
+
+    function cnt(){
+        for(var i=0; i<3; i++) device.outputs[0].send("J" + i + "=" + parseInt(Math.random()*200 - 100) + "\n")
+        setTimeout(cnt, 500)
+    }
+    cnt()
+    
+    return device;
+}
 
     
-    // var counter = Synergio.addDevice({
-    //     name: "Counter",
-    //     inputs: [
-    //         ["DEBUG"],
-    //         ["ONE"],
-    //         ["THREE"]
-    //     ],
-    //     outputs: [
-    //         ["1"],
-    //         ["2"],
-    //         ["3"]
-    //     ],
-    //     coords: [50, 50]
-    // })
-    
-   // function cnt(i, x, delay){
-   //     processSerialPortInput("dupa" + x)
-   //     setTimeout(function(){ cnt(i, x+1, delay) }, delay)
-   // }
-   // cnt(0, 1, 1000)
-   // cnt(1, 1, 1500)
-   // cnt(2, 1, 200)
-    
-    // var proxy = Synergio.addDevice({
-    //     name: "Proxy",
-    //     inputs: [
-    //         {name: "DEBUG", fun: function(data){ this.device.outputs[0].send(data) } },
-    //         {name: "DEBUG", fun: function(data){ this.device.outputs[1].send(data) } },
-    //         {name: "DEBUG", fun: function(data){ this.device.outputs[2].send(data) } },
-    //         {name: "DEBUG", fun: function(data){ this.device.outputs[3].send(data) } }
-    //     ],
-    //     outputs: [
-    //         {name: "1"},
-    //         {name: "2"},
-    //         {name: "3"},
-    //         {name: "4"}
-    //     ],
-    //     coords: [150, 50]
-    // })
-    
-    serialPort = Synergio.addDevice({
+Devices.Serial = function(opts){
+    var device = Synergio.Device({
         name: "Serial",
         inputs: [{
             name: "Data",
@@ -314,94 +317,116 @@ window.onload = function(){
         outputs: [ 
             {name: "Data"}
         ],
-        coords: [150, 50]
+    }.merge(opts));
+    
+    return device;
+}
+
+Devices.SendButton = function(opts){
+    var device = Synergio.Device({
+        name: "Send '" + opts.what + "'",
+        outputs: [{name: "Output"}]
+    }.merge(opts))
+    
+    device.button = Synergio.R.rect(device.header.attrs.x+10, device.header.attrs.y+25, 30, 10, 5).attr({fill: "rgb(37, 116, 176)", stroke: "#fff"})
+    device.set.push(device.button)
+    device.button.click(function(){
+        device.outputs[0].send(opts.what)
     })
     
-    var sendExcl = Synergio.addDevice({
-        name: "Send '!'",
-        outputs: [{name: "Out"}],
-        coords: [50, 50]
-    })
-    sendExcl.button = Synergio.R.rect(60, 75, 30, 10, 5).attr({fill: "rgb(37, 116, 176)", stroke: "#fff"})
-    sendExcl.set.push(sendExcl.button)
-    sendExcl.button.click(function(){
-        sendExcl.outputs[0].send("!")
-    })
-    sendExcl.button.hover(function(){
-        sendExcl.button.attr({fill: "#fff"})
+    device.button.hover(function(){
+        device.button.attr({fill: "#fff"})
     }, function(){
-        sendExcl.button.attr({fill: "rgb(37, 116, 176)"})
+        device.button.attr({fill: "rgb(37, 116, 176)"})
     })
     
-    var joy = Synergio.addDevice({
+    return device;
+}
+
+Devices.Joystick = function(opts){
+    var device = Synergio.Device({
         name: "Joystick",
         inputs: [
             {
                 name: "Serial Data",
                 fun: function(data){
                     var id = parseInt(data[1]);
-                    this.device.outputs[id].send(data.substr(3))
+                    if(this.device.outputs[id]) this.device.outputs[id].send(data.substr(3))
                 }
             }
         ],
-        
-        outputs: [
-            {name: "X-axis"}, {name: "Y-axis"}, {name: "Z-axis"}
-        ],
-        coords: [250, 50]
-    })
+        outputs: [{name: "X-axis"}, {name: "Y-axis"}, {name: "Z-axis"}]
+    }.merge(opts));
     
-    var debugs = [];
-    for(var i=0; i<3; i++){
-        debugs[i] = Synergio.addDevice({
-            name: "Debug " + i,
-            inputs: [
-                {
-                    name: "Input",
-                    fun: function(data){
-                        this.device.label.remove()
-                        console.log(this.device.header.attrs)
-                        this.device.label = Synergio.R.text(this.device.header.attrs.x + 40, this.device.header.attrs.y + 30, data).attr({fill: "#fff", "stroke-width": 0})
-                        this.device.set.push(this.device.label)
-                    }
-                }
-            ],
-            coords: [350, i*50+50]
-        })
-        debugs[i].label = {remove: function(){}}
-    }
-    
-    var log = Synergio.addDevice({
-        name: "Log",
-        inputs: [
-            {name: "Console", fun: function(data){ 
-                //console.log(data)
-                if($("#log div").length > 30){
-                    $("#log div").eq(0).remove()
-                }
-                $("#log").append("<div>" + data + "</div>")
-            } }
-        ],
-        coords: [250, 150]
-    })
-    
-    sendExcl.outputs[0].connectWith(serialPort.inputs[0])
-    sendExcl.outputs[0].connectWith(log.inputs[0])
-    serialPort.outputs[0].connectWith(joy.inputs[0])
-    serialPort.outputs[0].connectWith(log.inputs[0])
-    joy.outputs[0].connectWith(debugs[0].inputs[0])
-    joy.outputs[1].connectWith(debugs[1].inputs[0])
-    joy.outputs[2].connectWith(debugs[2].inputs[0])
-    
-    // counter.outputs[0].connectWith(proxy.inputs[0])
-    // counter.outputs[1].connectWith(proxy.inputs[1])
-    // counter.outputs[2].connectWith(proxy.inputs[3])
-    // proxy.outputs[0].connectWith(log.inputs[0])
-    // proxy.outputs[1].connectWith(log.inputs[0])
-    // proxy.outputs[2].connectWith(log.inputs[0])
-    // proxy.outputs[3].connectWith(log.inputs[0])
-    
-
-    
+    return device;
 }
 
+Devices.Debug = function(opts){
+    var device = Synergio.Device({
+        name: "Debug",
+        inputs: [
+            {
+                name: "Input",
+                fun: function(data){
+                    this.device.label.remove()
+                    console.log(this.device.header.attrs)
+                    this.device.label = Synergio.R.text(this.device.header.attrs.x + 40, this.device.header.attrs.y + 30, data).attr({fill: "#fff", "stroke-width": 0})
+                    this.device.set.push(this.device.label)
+                }
+            }
+        ],
+    }.merge(opts))
+    
+    device.label = {remove: function(){}}
+    
+    return device;
+}
+
+Devices.Log = function(opts){
+    var device = Synergio.Device({
+        name: "Log",
+        inputs: [
+            {
+                name: "Console", fun: function(data){ 
+                    if($("#log div").length > 30){
+                        $("#log div").eq(0).remove()
+                    }
+                    $("#log").append("<div>" + data + "</div>")
+                }
+            }
+        ],
+    }.merge(opts))
+    
+    return device;
+}
+
+
+
+Presets.JoystickSerial = function(){
+    var counter  = Devices.SerialMock({coords: [40, 120]})
+    var log      = Devices.Log({coords: [240, 160]})
+    var serial   = Devices.Serial({coords: [140, 40]})
+    var sendExcl = Devices.SendButton({what: "!", coords: [40, 40]})
+    var joy      = Devices.Joystick({coords: [240, 40]})
+
+    var axels = [];
+    for(var i=0; i<3; i++){
+        axels[i] = Devices.Debug({name: "Axis " + i, coords: [340, 60*i + 40]})
+        joy.outputs[i].connectWith(axels[i].inputs[0])
+    }
+    
+    sendExcl.outputs[0].connectWith(serial.inputs[0])
+    sendExcl.outputs[0].connectWith(log.inputs[0])
+    serial.outputs[0].connectWith(joy.inputs[0])
+    serial.outputs[0].connectWith(log.inputs[0])
+    
+    processSerialPortInput = function(msg){ serial.outputs[0].send(msg) }
+}
+
+
+var processSerialPortInput = function(msg){ console.log("got: " + msg) };
+
+window.onload = function(){
+    Synergio.init();
+    Synergio.loadPreset("JoystickSerial")
+}
