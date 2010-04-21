@@ -6,6 +6,7 @@
 
 - (void)awakeFromNib
 {
+		
 	[aView loadBundleFile:@"main"];
 }
 
