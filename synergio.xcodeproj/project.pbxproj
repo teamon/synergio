@@ -19,15 +19,17 @@
 		6F15C56A117B7B5E00C6F563 /* jquery.js in Resources */ = {isa = PBXBuildFile; fileRef = 6F15C55B117B7B5500C6F563 /* jquery.js */; };
 		6F15C56B117B7B5E00C6F563 /* raphael.js in Resources */ = {isa = PBXBuildFile; fileRef = 6F15C55D117B7B5500C6F563 /* raphael.js */; };
 		6F15C56C117B7B5E00C6F563 /* raphaelle.js in Resources */ = {isa = PBXBuildFile; fileRef = 6F15C55E117B7B5500C6F563 /* raphaelle.js */; };
+		6F910431117F3350000CED6A /* AMSerialPort_Deprecated.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F910426117F3350000CED6A /* AMSerialPort_Deprecated.m */; };
+		6F910432117F3350000CED6A /* AMSerialPort.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F910428117F3350000CED6A /* AMSerialPort.m */; };
+		6F910433117F3350000CED6A /* AMSerialPortAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F91042A117F3350000CED6A /* AMSerialPortAdditions.m */; };
+		6F910434117F3350000CED6A /* AMSerialPortList_Deprecated.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F91042C117F3350000CED6A /* AMSerialPortList_Deprecated.m */; };
+		6F910435117F3350000CED6A /* AMSerialPortList.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F91042E117F3350000CED6A /* AMSerialPortList.m */; };
+		6F910436117F3350000CED6A /* AMStandardEnumerator.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F910430117F3350000CED6A /* AMStandardEnumerator.m */; };
+		6F910520117F343A000CED6A /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6F91051F117F343A000CED6A /* IOKit.framework */; };
 		6FB8106C1177427A00E5B634 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6FB8106B1177427A00E5B634 /* WebKit.framework */; };
 		6FB8107A1177432300E5B634 /* MainView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FB810791177432300E5B634 /* MainView.m */; };
 		6FB8107D117743FB00E5B634 /* Synergio.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FB8107C117743FB00E5B634 /* Synergio.m */; };
 		6FB810CF117746AA00E5B634 /* AppController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FB810CE117746AA00E5B634 /* AppController.m */; };
-		6FCB5E25117F2BCF007847DB /* AMSerialPort.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FCB5E1C117F2BCF007847DB /* AMSerialPort.m */; };
-		6FCB5E26117F2BCF007847DB /* AMSerialPortAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FCB5E1E117F2BCF007847DB /* AMSerialPortAdditions.m */; };
-		6FCB5E27117F2BCF007847DB /* AMSerialPortList_Deprecated.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FCB5E20117F2BCF007847DB /* AMSerialPortList_Deprecated.m */; };
-		6FCB5E28117F2BCF007847DB /* AMSerialPortList.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FCB5E22117F2BCF007847DB /* AMSerialPortList.m */; };
-		6FCB5E29117F2BCF007847DB /* AMStandardEnumerator.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FCB5E24117F2BCF007847DB /* AMStandardEnumerator.m */; };
 		6FCB5E37117F2D0F007847DB /* Serial.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FCB5E36117F2D0F007847DB /* Serial.m */; };
 		8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C165CFE840E0CC02AAC07 /* InfoPlist.strings */; };
 		8D11072D0486CEB800E47090 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; settings = {ATTRIBUTES = (); }; };
@@ -50,6 +52,21 @@
 		6F15C55C117B7B5500C6F563 /* main.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = main.html; path = resources/main.html; sourceTree = "<group>"; };
 		6F15C55D117B7B5500C6F563 /* raphael.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = raphael.js; path = resources/raphael.js; sourceTree = "<group>"; };
 		6F15C55E117B7B5500C6F563 /* raphaelle.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = raphaelle.js; path = resources/raphaelle.js; sourceTree = "<group>"; };
+		6F910423117F3350000CED6A /* AMSDKCompatibility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AMSDKCompatibility.h; sourceTree = "<group>"; };
+		6F910424117F3350000CED6A /* AMSerialErrors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AMSerialErrors.h; sourceTree = "<group>"; };
+		6F910425117F3350000CED6A /* AMSerialPort_Deprecated.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AMSerialPort_Deprecated.h; sourceTree = "<group>"; };
+		6F910426117F3350000CED6A /* AMSerialPort_Deprecated.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AMSerialPort_Deprecated.m; sourceTree = "<group>"; };
+		6F910427117F3350000CED6A /* AMSerialPort.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AMSerialPort.h; sourceTree = "<group>"; };
+		6F910428117F3350000CED6A /* AMSerialPort.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AMSerialPort.m; sourceTree = "<group>"; };
+		6F910429117F3350000CED6A /* AMSerialPortAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AMSerialPortAdditions.h; sourceTree = "<group>"; };
+		6F91042A117F3350000CED6A /* AMSerialPortAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AMSerialPortAdditions.m; sourceTree = "<group>"; };
+		6F91042B117F3350000CED6A /* AMSerialPortList_Deprecated.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AMSerialPortList_Deprecated.h; sourceTree = "<group>"; };
+		6F91042C117F3350000CED6A /* AMSerialPortList_Deprecated.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AMSerialPortList_Deprecated.m; sourceTree = "<group>"; };
+		6F91042D117F3350000CED6A /* AMSerialPortList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AMSerialPortList.h; sourceTree = "<group>"; };
+		6F91042E117F3350000CED6A /* AMSerialPortList.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AMSerialPortList.m; sourceTree = "<group>"; };
+		6F91042F117F3350000CED6A /* AMStandardEnumerator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AMStandardEnumerator.h; sourceTree = "<group>"; };
+		6F910430117F3350000CED6A /* AMStandardEnumerator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AMStandardEnumerator.m; sourceTree = "<group>"; };
+		6F91051F117F343A000CED6A /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = System/Library/Frameworks/IOKit.framework; sourceTree = SDKROOT; };
 		6FB8106B1177427A00E5B634 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
 		6FB810781177432300E5B634 /* MainView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainView.h; sourceTree = "<group>"; };
 		6FB810791177432300E5B634 /* MainView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MainView.m; sourceTree = "<group>"; };
@@ -57,18 +74,6 @@
 		6FB8107C117743FB00E5B634 /* Synergio.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Synergio.m; sourceTree = "<group>"; };
 		6FB810CD117746AA00E5B634 /* AppController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppController.h; sourceTree = "<group>"; };
 		6FB810CE117746AA00E5B634 /* AppController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppController.m; sourceTree = "<group>"; };
-		6FCB5E19117F2BCF007847DB /* AMSDKCompatibility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AMSDKCompatibility.h; sourceTree = "<group>"; };
-		6FCB5E1A117F2BCF007847DB /* AMSerialErrors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AMSerialErrors.h; sourceTree = "<group>"; };
-		6FCB5E1B117F2BCF007847DB /* AMSerialPort.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AMSerialPort.h; sourceTree = "<group>"; };
-		6FCB5E1C117F2BCF007847DB /* AMSerialPort.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AMSerialPort.m; sourceTree = "<group>"; };
-		6FCB5E1D117F2BCF007847DB /* AMSerialPortAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AMSerialPortAdditions.h; sourceTree = "<group>"; };
-		6FCB5E1E117F2BCF007847DB /* AMSerialPortAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AMSerialPortAdditions.m; sourceTree = "<group>"; };
-		6FCB5E1F117F2BCF007847DB /* AMSerialPortList_Deprecated.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AMSerialPortList_Deprecated.h; sourceTree = "<group>"; };
-		6FCB5E20117F2BCF007847DB /* AMSerialPortList_Deprecated.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AMSerialPortList_Deprecated.m; sourceTree = "<group>"; };
-		6FCB5E21117F2BCF007847DB /* AMSerialPortList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AMSerialPortList.h; sourceTree = "<group>"; };
-		6FCB5E22117F2BCF007847DB /* AMSerialPortList.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AMSerialPortList.m; sourceTree = "<group>"; };
-		6FCB5E23117F2BCF007847DB /* AMStandardEnumerator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AMStandardEnumerator.h; sourceTree = "<group>"; };
-		6FCB5E24117F2BCF007847DB /* AMStandardEnumerator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AMStandardEnumerator.m; sourceTree = "<group>"; };
 		6FCB5E35117F2D0F007847DB /* Serial.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Serial.h; sourceTree = "<group>"; };
 		6FCB5E36117F2D0F007847DB /* Serial.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Serial.m; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* synergio-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "synergio-Info.plist"; sourceTree = "<group>"; };
@@ -82,6 +87,7 @@
 			files = (
 				8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */,
 				6FB8106C1177427A00E5B634 /* WebKit.framework in Frameworks */,
+				6F910520117F343A000CED6A /* IOKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -91,7 +97,7 @@
 		080E96DDFE201D6D7F000001 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
-				6FCB5E17117F2BC1007847DB /* AMSerialPort */,
+				6F910559117F348B000CED6A /* AMSerialPort */,
 				6FB810CD117746AA00E5B634 /* AppController.h */,
 				6FB810CE117746AA00E5B634 /* AppController.m */,
 				6FB810781177432300E5B634 /* MainView.h */,
@@ -107,7 +113,9 @@
 		1058C7A0FEA54F0111CA2CBB /* Linked Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				6FB8106B1177427A00E5B634 /* WebKit.framework */,
 				1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */,
+				6F91051F117F343A000CED6A /* IOKit.framework */,
 			);
 			name = "Linked Frameworks";
 			sourceTree = "<group>";
@@ -138,7 +146,6 @@
 				29B97315FDCFA39411CA2CEA /* Other Sources */,
 				29B97323FDCFA39411CA2CEA /* Frameworks */,
 				19C28FACFE9D520D11CA2CBB /* Products */,
-				6FB8106B1177427A00E5B634 /* WebKit.framework */,
 			);
 			name = synergio;
 			sourceTree = "<group>";
@@ -178,21 +185,23 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		6FCB5E17117F2BC1007847DB /* AMSerialPort */ = {
+		6F910559117F348B000CED6A /* AMSerialPort */ = {
 			isa = PBXGroup;
 			children = (
-				6FCB5E19117F2BCF007847DB /* AMSDKCompatibility.h */,
-				6FCB5E1A117F2BCF007847DB /* AMSerialErrors.h */,
-				6FCB5E1B117F2BCF007847DB /* AMSerialPort.h */,
-				6FCB5E1C117F2BCF007847DB /* AMSerialPort.m */,
-				6FCB5E1D117F2BCF007847DB /* AMSerialPortAdditions.h */,
-				6FCB5E1E117F2BCF007847DB /* AMSerialPortAdditions.m */,
-				6FCB5E1F117F2BCF007847DB /* AMSerialPortList_Deprecated.h */,
-				6FCB5E20117F2BCF007847DB /* AMSerialPortList_Deprecated.m */,
-				6FCB5E21117F2BCF007847DB /* AMSerialPortList.h */,
-				6FCB5E22117F2BCF007847DB /* AMSerialPortList.m */,
-				6FCB5E23117F2BCF007847DB /* AMStandardEnumerator.h */,
-				6FCB5E24117F2BCF007847DB /* AMStandardEnumerator.m */,
+				6F910423117F3350000CED6A /* AMSDKCompatibility.h */,
+				6F910424117F3350000CED6A /* AMSerialErrors.h */,
+				6F910425117F3350000CED6A /* AMSerialPort_Deprecated.h */,
+				6F910426117F3350000CED6A /* AMSerialPort_Deprecated.m */,
+				6F910427117F3350000CED6A /* AMSerialPort.h */,
+				6F910428117F3350000CED6A /* AMSerialPort.m */,
+				6F910429117F3350000CED6A /* AMSerialPortAdditions.h */,
+				6F91042A117F3350000CED6A /* AMSerialPortAdditions.m */,
+				6F91042B117F3350000CED6A /* AMSerialPortList_Deprecated.h */,
+				6F91042C117F3350000CED6A /* AMSerialPortList_Deprecated.m */,
+				6F91042D117F3350000CED6A /* AMSerialPortList.h */,
+				6F91042E117F3350000CED6A /* AMSerialPortList.m */,
+				6F91042F117F3350000CED6A /* AMStandardEnumerator.h */,
+				6F910430117F3350000CED6A /* AMStandardEnumerator.m */,
 			);
 			name = AMSerialPort;
 			sourceTree = "<group>";
@@ -267,12 +276,13 @@
 				6F15C562117B7B5500C6F563 /* jquery.js in Sources */,
 				6F15C564117B7B5500C6F563 /* raphael.js in Sources */,
 				6F15C565117B7B5500C6F563 /* raphaelle.js in Sources */,
-				6FCB5E25117F2BCF007847DB /* AMSerialPort.m in Sources */,
-				6FCB5E26117F2BCF007847DB /* AMSerialPortAdditions.m in Sources */,
-				6FCB5E27117F2BCF007847DB /* AMSerialPortList_Deprecated.m in Sources */,
-				6FCB5E28117F2BCF007847DB /* AMSerialPortList.m in Sources */,
-				6FCB5E29117F2BCF007847DB /* AMStandardEnumerator.m in Sources */,
 				6FCB5E37117F2D0F007847DB /* Serial.m in Sources */,
+				6F910431117F3350000CED6A /* AMSerialPort_Deprecated.m in Sources */,
+				6F910432117F3350000CED6A /* AMSerialPort.m in Sources */,
+				6F910433117F3350000CED6A /* AMSerialPortAdditions.m in Sources */,
+				6F910434117F3350000CED6A /* AMSerialPortList_Deprecated.m in Sources */,
+				6F910435117F3350000CED6A /* AMSerialPortList.m in Sources */,
+				6F910436117F3350000CED6A /* AMStandardEnumerator.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

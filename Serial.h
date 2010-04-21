@@ -11,9 +11,21 @@
 
 
 @interface Serial : NSObject {
-
+	AMSerialPort *serialPort;
+	NSMutableString *inputBuffer;
+	id delegate;
 }
 
--(Serial *)init;
+-(Serial *)openWithDelegate:(id)theDelegate andPath:(NSString *)path;
+
+-(void)close;
+
+-(void)serialPortReadData:(NSDictionary *)dataDictionary;
+
+-(void)send:(NSString *)msg;
+
++ (BOOL)isSelectorExcludedFromWebScript:(SEL)aSelector;
+
++ (BOOL)isKeyExcludedFromWebScript:(const char *)name;
 
 @end

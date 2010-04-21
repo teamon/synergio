@@ -16,8 +16,9 @@
 }
 
 - (void)webView:(WebView *)sender windowScriptObjectAvailable: (WebScriptObject *)windowScriptObject {
-	Synergio *syn = [[Synergio alloc] init];
-	[windowScriptObject setValue:syn forKey:@"Synergio"];
+	scriptObject = windowScriptObject;
+	
+	[windowScriptObject setValue:[appController serial] forKey:@"SerialPort"];
 }
 
 - (void)loadBundleFile:(NSString *)bundleFileName
@@ -29,6 +30,18 @@
 		
 	NSURL *url = [NSURL fileURLWithPath:filePath];
 	[[self mainFrame] loadRequest:[NSURLRequest requestWithURL:url]];
+}
+
+-(void)processInput:(NSString *)input
+{
+	if(scriptObject != NULL){
+		[scriptObject callWebScriptMethod:@"processSerialPortInput" withArguments:[NSArray arrayWithObject:input]];
+	}
+}
+
+-(void)setAppController:(id)theAppController
+{
+	appController = theAppController;
 }
 
 @end

@@ -3,9 +3,12 @@
 
 
 @interface MainView : WebView {
-
+	WebScriptObject *scriptObject;
+	id appController;
 }
 
 - (void)loadBundleFile:(NSString *)bundleFileName;
+
+- (void)setAppController:(id)theAppController;
 
 @end

@@ -9,7 +9,7 @@
 
 -(void)log:(NSString *)data
 {
-	NSLog(data);
+	NSLog(@"%s", data);
 }
 
 @end

@@ -12,11 +12,18 @@ Array.prototype.find = function(fun){
     return null;
 }
 
+var serialPort;
+
+function processSerialPortInput(msg){
+    //console.log("got " + msg)
+    if(serialPort) serialPort.outputs[0].send(msg)
+}
+
 window.onload = function(){
     
-    var Synergio = {
+    Synergio = {
         R: Raphael("holder", 640, 480),
-        devices: [],
+        devices: []
     }
         
     var width = 80;
@@ -255,66 +262,146 @@ window.onload = function(){
     }
 
     
-    var counter = Synergio.addDevice({
-        name: "Counter",
-        inputs: [
-            ["DEBUG"],
-            ["ONE"],
-            ["THREE"]
-        ],
-        outputs: [
-            ["1"],
-            ["2"],
-            ["3"]
-        ],
-        coords: [50, 50]
-    })
+    // var counter = Synergio.addDevice({
+    //     name: "Counter",
+    //     inputs: [
+    //         ["DEBUG"],
+    //         ["ONE"],
+    //         ["THREE"]
+    //     ],
+    //     outputs: [
+    //         ["1"],
+    //         ["2"],
+    //         ["3"]
+    //     ],
+    //     coords: [50, 50]
+    // })
     
-    function cnt(i, x, delay){
-        counter.outputs[i].send(x)
-        setTimeout(function(){ cnt(i, x+1, delay) }, delay)
-    }
-    cnt(0, 1, 1000)
-    cnt(1, 1, 1500)
-    cnt(2, 1, 200)
+   // function cnt(i, x, delay){
+   //     processSerialPortInput("dupa" + x)
+   //     setTimeout(function(){ cnt(i, x+1, delay) }, delay)
+   // }
+   // cnt(0, 1, 1000)
+   // cnt(1, 1, 1500)
+   // cnt(2, 1, 200)
     
-    var proxy = Synergio.addDevice({
-        name: "Proxy",
-        inputs: [
-            {name: "DEBUG", fun: function(data){ this.device.outputs[0].send(data) } },
-            {name: "DEBUG", fun: function(data){ this.device.outputs[1].send(data) } },
-            {name: "DEBUG", fun: function(data){ this.device.outputs[2].send(data) } },
-            {name: "DEBUG", fun: function(data){ this.device.outputs[3].send(data) } }
-        ],
-        outputs: [
-            {name: "1"},
-            {name: "2"},
-            {name: "3"},
-            {name: "4"}
+    // var proxy = Synergio.addDevice({
+    //     name: "Proxy",
+    //     inputs: [
+    //         {name: "DEBUG", fun: function(data){ this.device.outputs[0].send(data) } },
+    //         {name: "DEBUG", fun: function(data){ this.device.outputs[1].send(data) } },
+    //         {name: "DEBUG", fun: function(data){ this.device.outputs[2].send(data) } },
+    //         {name: "DEBUG", fun: function(data){ this.device.outputs[3].send(data) } }
+    //     ],
+    //     outputs: [
+    //         {name: "1"},
+    //         {name: "2"},
+    //         {name: "3"},
+    //         {name: "4"}
+    //     ],
+    //     coords: [150, 50]
+    // })
+    
+    serialPort = Synergio.addDevice({
+        name: "Serial",
+        inputs: [{
+            name: "Data",
+            fun: function(data){
+                console.log(SerialPort)
+                SerialPort.send_(data)
+            }
+        }],
+        outputs: [ 
+            {name: "Data"}
         ],
         coords: [150, 50]
     })
+    
+    var sendExcl = Synergio.addDevice({
+        name: "Send '!'",
+        outputs: [{name: "Out"}],
+        coords: [50, 50]
+    })
+    sendExcl.button = Synergio.R.rect(60, 75, 30, 10, 5).attr({fill: "rgb(37, 116, 176)", stroke: "#fff"})
+    sendExcl.set.push(sendExcl.button)
+    sendExcl.button.click(function(){
+        sendExcl.outputs[0].send("!")
+    })
+    sendExcl.button.hover(function(){
+        sendExcl.button.attr({fill: "#fff"})
+    }, function(){
+        sendExcl.button.attr({fill: "rgb(37, 116, 176)"})
+    })
+    
+    var joy = Synergio.addDevice({
+        name: "Joystick",
+        inputs: [
+            {
+                name: "Serial Data",
+                fun: function(data){
+                    var id = parseInt(data[1]);
+                    this.device.outputs[id].send(data.substr(3))
+                }
+            }
+        ],
+        
+        outputs: [
+            {name: "X-axis"}, {name: "Y-axis"}, {name: "Z-axis"}
+        ],
+        coords: [250, 50]
+    })
+    
+    var debugs = [];
+    for(var i=0; i<3; i++){
+        debugs[i] = Synergio.addDevice({
+            name: "Debug " + i,
+            inputs: [
+                {
+                    name: "Input",
+                    fun: function(data){
+                        this.device.label.remove()
+                        console.log(this.device.header.attrs)
+                        this.device.label = Synergio.R.text(this.device.header.attrs.x + 40, this.device.header.attrs.y + 30, data).attr({fill: "#fff", "stroke-width": 0})
+                        this.device.set.push(this.device.label)
+                    }
+                }
+            ],
+            coords: [350, i*50+50]
+        })
+        debugs[i].label = {remove: function(){}}
+    }
     
     var log = Synergio.addDevice({
         name: "Log",
         inputs: [
             {name: "Console", fun: function(data){ 
-                console.log(data)
+                //console.log(data)
                 if($("#log div").length > 30){
                     $("#log div").eq(0).remove()
                 }
                 $("#log").append("<div>" + data + "</div>")
             } }
         ],
-        coords: [250, 50]
+        coords: [250, 150]
     })
     
-    counter.outputs[0].connectWith(proxy.inputs[0])
-    counter.outputs[1].connectWith(proxy.inputs[1])
-    counter.outputs[2].connectWith(proxy.inputs[3])
-    proxy.outputs[0].connectWith(log.inputs[0])
-    proxy.outputs[1].connectWith(log.inputs[0])
-    proxy.outputs[2].connectWith(log.inputs[0])
-    proxy.outputs[3].connectWith(log.inputs[0])
+    sendExcl.outputs[0].connectWith(serialPort.inputs[0])
+    sendExcl.outputs[0].connectWith(log.inputs[0])
+    serialPort.outputs[0].connectWith(joy.inputs[0])
+    serialPort.outputs[0].connectWith(log.inputs[0])
+    joy.outputs[0].connectWith(debugs[0].inputs[0])
+    joy.outputs[1].connectWith(debugs[1].inputs[0])
+    joy.outputs[2].connectWith(debugs[2].inputs[0])
+    
+    // counter.outputs[0].connectWith(proxy.inputs[0])
+    // counter.outputs[1].connectWith(proxy.inputs[1])
+    // counter.outputs[2].connectWith(proxy.inputs[3])
+    // proxy.outputs[0].connectWith(log.inputs[0])
+    // proxy.outputs[1].connectWith(log.inputs[0])
+    // proxy.outputs[2].connectWith(log.inputs[0])
+    // proxy.outputs[3].connectWith(log.inputs[0])
+    
+
     
 }
+
