@@ -1,4 +1,5 @@
-//= require "lang"
+//We are using Class, Object and String extensions from Prototype
+//= require "prototype"
 
 var Synergio = { 
     width: 80,
