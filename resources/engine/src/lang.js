@@ -79,6 +79,8 @@ Array.prototype.remove = function(fun){
     return this;
 }
 
+var isEqualPred = function(val){ return function(obj){return obj == val}};
+
 Array.prototype.find = function(fun){
     for (var i=0; i < this.length; i++) {
         if(fun(this[i])) return this[i];

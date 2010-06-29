@@ -9,8 +9,8 @@ var Connection = Class.create({
 			bulletB: null,
 			owner: this,
 			calculatePathAndBullets: function(){                        
-          var bb1 = this.owner.a.view.pad.getBBox();
-          var bb2 = this.owner.b.view.pad.getBBox();
+          var bb1 = this.owner.a().view.pad.getBBox();
+          var bb2 = this.owner.b().view.pad.getBBox();
   
           var x1 = bb1.x + bb1.width / 2;
           var y1 = bb1.y + bb1.height / 2;
@@ -33,15 +33,15 @@ var Connection = Class.create({
 				this.bulletB = Program.R.circle(d[3], d[4], 2).attr({fill: "#fff", stroke: "none"});
 			},
 			remove: function(){
-				path.remove();
-				bulletA.remove();
-				bulletB.remove();
+				this.path.remove();
+				this.bulletA.remove();
+				this.bulletB.remove();
 			},
 			repaint: function(){
 				var d = this.calculatePathAndBullets();
 				this.path.attr({path: d[0]});
-				this.bulletA.attr({x: d[1], y: d[2]});
-				this.bulletB.attr({x: d[3], y: d[4]});
+				this.bulletA.attr({cx: d[1], cy: d[2]});
+				this.bulletB.attr({cx: d[3], cy: d[4]});
 			}
 		}));
 	},
@@ -60,7 +60,16 @@ var Connection = Class.create({
 		b.device.receiveInput(a, b, val);
 	},
 	
+	a: function(){
+		return this.sockets[0];
+	},	
+	b: function(){
+		return this.sockets[1];
+	},	
 	remove: function(){
 		this.view.remove();
+	},	
+	disconnect: function(){
+		this.a().disconnect(this.b());
 	}
 });

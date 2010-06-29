@@ -3,57 +3,67 @@ var Socket = Class.create({
 	name: '',
 	connections: null,
 	view: null,
-	x: 0,
-	y: 0,
-	initialize: function(device, name){
-		this.connections = [];
-		this.device = device;
-		
+	x: 10,
+	y: 10,
+	createView: function(){
 		this.view = new (Class.create({
 			owner: this,
 			pad: null,
-			createPad: function(){
+			initialize: function(){
 				this.pad = Program.R.circle(this.owner.x, this.owner.y, 4).attr(
 					{stroke: "#fff", fill: "#fff", "fill-opacity": 0.0});
+				
+				var pad = this.pad;
 				this.pad.hover(
-					function(){this.pad.attr({stroke: "#000"});}, 
-					function(){this.pad.attr({stroke: "#fff"});}
+					function(){pad.attr({stroke: "#000"});}, 
+					function(){pad.attr({stroke: "#fff"});}
 				);
-			},
-			initialize: function(){
-				this.createPad();								
 				this.pad.draggable();
+				
 				var mouse, conn;				
-				var socket = this;
+				var t = this;
 				this.pad.dragStart = function(x, y, mousedownevent, mousemoveevent){
-					mouse = new DraggedSocket(new DumbDevice(), this.view, this.isInput());
-					mouse.repaint(x, y);
+					var view = t;
 					
-					socket.createPad();
-					socket.repaint(this.x, this.y);
+					t.owner.view = null;
+					t.owner.createView();					
+					t.repaint();
 					
-					conn = socket.connect(mouse);
+					mouse = new DraggedSocket(new DumbDevice(), view);
+					view.repaint();
+
+					conn = t.owner.connect(mouse);
+					return mouse.view.pad;
 				};
 				
 				this.pad.dragUpdate = function(dragging_over, dx, dy, event){
-            mouse.redraw(mouse.x + dx,mouse.y + dy);
-            conn.repaint();
-        };
-				
-				this.pad.dragFinish = function(dropped_on, x, y, event){
-					console.log('drag finish');
-					this.owner.disconnect(mouse);
-					mouse.remove();
+	      	mouse.repaint(mouse.x + dx,mouse.y + dy);
+	      	conn.repaint();
 				};
 				
+				var owner = this.owner;
+				this.pad.dragFinish = function(dropped_on, x, y, event){
+					mouse.remove();
+					var socket = Program.findSocket(x, y);
+					if (socket != null && t.owner.canConnect(socket)){
+						t.owner.connect(socket);
+					}
+				};
 			},
-			repaint: function(x, y){
-				this.pad.attr({x: x, y: y});
+			repaint: function(){
+				this.pad.attr({cx: this.owner.x, cy: this.owner.y});
 			},
 			remove: function(){
 				this.pad.remove();
 			}
 		}));
+	},
+	
+	initialize: function(device, name){
+		this.connections = [];
+		this.device = device;
+		this.name = name;
+		this.createView();
 	},
 	
 	isInput: function(){
@@ -67,6 +77,10 @@ var Socket = Class.create({
 	},
 	
 	canConnect: function(socket){
+		return socket._canConnect(this);
+	},
+	
+	_canConnect: function(socket){
 		return (socket.isInput() == !this.isInput()) && this.acceptsTypeOf(socket);
 	},
 	
@@ -75,12 +89,15 @@ var Socket = Class.create({
 		
 		this.disconnect(socket);
 		var connection = new Connection(this, socket);
+		this.connections.push(connection);
+		socket.connections.push(connection);
 		return connection;
 	},
 	
 	disconnect: function(socket){
+		var t = this;
 		var pred = function(conn){
-			if (conn.sockets.pos(socket) != -1 && conn.sockets.pos(this) != -1){
+			if (conn.sockets.pos(isEqualPred(socket)) != -1 && conn.sockets.pos(isEqualPred(t)) != -1){
 				conn.remove();
 				return true;
 			}else{
@@ -96,11 +113,14 @@ var Socket = Class.create({
 	repaint: function(x, y){
 		this.x = x;
 		this.y = y;
-		this.view.repaint(x, y);
+		this.view.repaint();
+		
 		this.updateConnections();
 	},
 	remove: function(){
 		this.view.remove();
-		//this.connections.forEach(function(conn){conn.remove();});
+		this.connections.forEach(function(conn){conn.disconnect();});
 	}	
 });
+//= require "devices/DumbDevice"
+//= require "sockets/DraggedSocket"
