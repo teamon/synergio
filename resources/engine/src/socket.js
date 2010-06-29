@@ -14,14 +14,16 @@ var Socket = Class.create({
 					{stroke: "#fff", fill: "#fff", "fill-opacity": 0.0});
 				
 				var pad = this.pad;
-				this.pad.hover(
-					function(){pad.attr({stroke: "#000"});}, 
-					function(){pad.attr({stroke: "#fff"});}
-				);
+				var t = this;
+				
+				$(this.pad.node).hover(
+					function(event){pad.attr({stroke: "#000"});},
+					function(event){pad.attr({stroke: "#fff"});});
+				
+				$(this.pad.node).dblclick(function(){ t.owner.disconnectAll();});
 				this.pad.draggable();
 				
 				var mouse, conn;				
-				var t = this;
 				this.pad.dragStart = function(x, y, mousedownevent, mousemoveevent){
 					var view = t;
 					
@@ -30,19 +32,31 @@ var Socket = Class.create({
 					t.repaint();
 					
 					mouse = new DraggedSocket(new DumbDevice(), view);
-					view.repaint();
-
+					view.repaint();					
 					conn = t.owner.connect(mouse);
+										
 					return mouse.view.pad;
 				};
 				
 				this.pad.dragUpdate = function(dragging_over, dx, dy, event){
-	      	mouse.repaint(mouse.x + dx,mouse.y + dy);
-	      	conn.repaint();
+					var x = mouse.x + dx, y = mouse.y + dy;
+					var socket = Program.findSocket(x, y);					
+					
+					if (socket != null){
+						if (t.owner.canConnect(socket))
+							conn.view.state = 'connection-possible';
+						else
+							conn.view.state = 'connection-impossible';
+					}else{
+						conn.view.state = '';
+					}
+					
+	      	mouse.repaint(x, y);
+	      	conn.repaint();	
 				};
 				
 				var owner = this.owner;
-				this.pad.dragFinish = function(dropped_on, x, y, event){
+				this.pad.dragFinish = function(dropped_on, x, y, event){										
 					mouse.remove();
 					var socket = Program.findSocket(x, y);
 					if (socket != null && t.owner.canConnect(socket)){
@@ -86,27 +100,31 @@ var Socket = Class.create({
 	
 	connect: function(socket){
 		if (!this.canConnect(socket)) return null;
-		
+		if (this.isInput()) return socket.connect(this);
 		this.disconnect(socket);
 		var connection = new Connection(this, socket);
+		
 		this.connections.push(connection);
 		socket.connections.push(connection);
+		
+		connection.repaint();
 		return connection;
 	},
 	
 	disconnect: function(socket){
 		var t = this;
 		var pred = function(conn){
-			if (conn.sockets.pos(isEqualPred(socket)) != -1 && conn.sockets.pos(isEqualPred(t)) != -1){
-				conn.remove();
-				return true;
-			}else{
-				return false;
-			}
+			return (conn.sockets.pos(isEqualPred(socket)) != -1 && conn.sockets.pos(isEqualPred(t)) != -1);
 		};
 		socket.connections.remove(pred);
-		this.connections.remove(pred);		
+		this.connections.remove(pred);
 	},
+	
+	disconnectAll: function(){
+		while(this.connections.length > 0)
+			this.connections[0].disconnect();
+	},
+	
 	updateConnections: function(){
 		this.connections.forEach(function(conn){conn.repaint();});
 	},
@@ -119,7 +137,7 @@ var Socket = Class.create({
 	},
 	remove: function(){
 		this.view.remove();
-		this.connections.forEach(function(conn){conn.disconnect();});
+		this.disconnectAll();
 	}	
 });
 //= require "devices/DumbDevice"

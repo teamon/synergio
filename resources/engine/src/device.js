@@ -9,19 +9,23 @@ var Device = Class.create({
 	outputs: null,
 	name: '',
 	
-	initialize: function(name, width, height, x, y){
-		this.name = name;
-		this.width = width || Program.width;
-		this.height = height || Program.height;
-		this.x = x;	this.y = y;
+	initialize: function(opts){
+		this.merge(opts);
+		
+		this.width = this.width || Program.width;
+		this.height = this.height || Program.height;
+
 		this.inputs = [];	this.outputs = [];
 		
 		this.view = new (Class.create({
-			border: Program.R.rect(0, 0, width, height, 5).attr({stroke: "#fff"}),
-			header: Program.R.rect(0, 0, width, 20, 5).attr({stroke: "#fff", fill: "#fff", "fill-opacity": 0.3}),
-			label: Program.R.text(width/2, 10, name).attr({"stroke-width": 0, fill: "#fff", "font-family": "Lucida Grande", "font-size": "11pt", "font-style": "normal"}),
+			border: Program.R.rect(0, 0, this.width, this.height, 5).attr({stroke: "#fff"}),
+			header: Program.R.rect(0, 0, this.width, 20, 5).attr({stroke: "#fff", fill: "#fff", "fill-opacity": 0.3}),
+			label: Program.R.text(this.width/2, 10, this.name).attr(Program.textDefaults),
+			set: Program.R.set(),
 			owner: this,
 			initialize: function(){
+				this.set.push(this.border, this.header, this.label);
+				
 				this.header.draggable();
 				this.label.draggable();
 				
@@ -29,12 +33,12 @@ var Device = Class.create({
 				this.header.dragUpdate = this.label.dragUpdate = function(dragging_over, dx, dy, event){return owner.onDrag(dragging_over, dx, dy, event);};
 			},
 			repaint: function(){
-				this.border.attr({x: this.owner.x, y: this.owner.y, 
-					width: this.owner.width, height: this.owner.height});
-				this.header.attr({x: this.owner.x, y: this.owner.y, 
-					width: this.owner.width});
-				this.label.attr({x: this.owner.width/2 + this.owner.x, y: this.owner.y + 10, 
-					text: this.owner.name});		
+				var dx = this.owner.x - this.border.attrs.x, dy = -this.border.attrs.y + this.owner.y;
+				this.set.translate(dx, dy);
+				
+				this.border.attr({width: this.owner.width, height: this.owner.height});
+				this.header.attr({width: this.owner.width});
+				this.label.attr({text: this.owner.name});		
 			}			
 		}));
 		this.view.repaint();
@@ -68,6 +72,13 @@ var Device = Class.create({
 		this.translate(dx, dy);
 	},
 	receiveInput: function(fromInput, toInput, val){},
+	send: function(output, val){
+		if (Object.isNumber(output)){			
+			this.outputs[0].send(val);
+		}else{
+			output.send(val);
+		}
+	},
 	addInput: function(socket){
 		this.inputs.push(socket);
 		var pos = this.getSocketPos(this.defaultInputBase(), this.inputs.length-1);
@@ -77,11 +88,10 @@ var Device = Class.create({
 		this.outputs.push(socket);
 		var pos = this.getSocketPos(this.defaultOutputBase(), this.outputs.length-1);
 		socket.repaint(pos[0], pos[1]);
-		
 	},
 	socketOfAt: function(sockets, x, y){
 		return sockets.find(function(socket){
-			var b = socket.view.pad.getBBox(), E = b.width;
+			var b = socket.view.pad.getBBox(), E = b.width + 2;
 			return (Math.abs(b.x - x) < E && Math.abs(b.y - y) < E);
 		});
 	},

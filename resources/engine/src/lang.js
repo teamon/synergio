@@ -66,20 +66,18 @@ var Try = {
 };
 
 Object.prototype.merge = function(other){
-    res = {};
-    for(var p in this) res[p] = this[p];
-    for(var p in other) res[p] = other[p];
-    return res;
+  for(var p in other) this[p] = other[p];
+	return this;
 }
 
 Array.prototype.remove = function(fun){
-    for (var i=0; i < this.length; i++) {
-        if(fun(this[i])) this.splice(i, 1);
-    }
-    return this;
+	for (var i=0; i < this.length; i++) {
+		if(fun(this[i])) this.splice(i, 1);
+	}
+	return this;
 }
 
-var isEqualPred = function(val){ return function(obj){return obj == val}};
+var isEqualPred = function(val){ return function(obj){return (obj == val)};};
 
 Array.prototype.find = function(fun){
     for (var i=0; i < this.length; i++) {

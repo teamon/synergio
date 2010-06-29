@@ -1,4 +1,5 @@
 var Connection = Class.create({
+	state: '',	
 	sockets: null,
 	view: null,
 	initialize: function(a, b){
@@ -8,6 +9,13 @@ var Connection = Class.create({
 			bulletA: null,
 			bulletB: null,
 			owner: this,
+			state: '',
+			
+			defaultStroke: {stroke: "#fff", fill: "none", "stroke-width": 3, "stroke-opacity": 0.5},
+			possibleStroke: {stroke: "#0f0"},
+			impossibleStroke: {stroke: "#f00"},
+			hover: {"stroke-opacity": .8},
+			
 			calculatePathAndBullets: function(){                        
           var bb1 = this.owner.a().view.pad.getBBox();
           var bb2 = this.owner.b().view.pad.getBBox();
@@ -22,13 +30,22 @@ var Connection = Class.create({
           var x3 = x4 + (x1 - x4) / 2;
           var y3 = y4;
 
-          path = ["M", x1, y1, "C", x2, y2, x3, y3, x4, y4].join(",");
+          var path = ["M", x1, y1, "C", x2, y2, x3, y3, x4, y4].join(",");
           
           return [path, x1, y1, x4, y4];
       },      
 			initialize: function(){
-				var d = this.calculatePathAndBullets();
-				this.path = Program.R.path(d[0]).attr({stroke: "#fff", fill: "none", "stroke-width": 3, "stroke-opacity": 0.5});
+				var t = this;
+				['possibleStroke', 'impossibleStroke', 'hover']
+					.forEach(function(name){t[name] = Object.clone(t.defaultStroke).merge(t[name]);});
+				
+				var d = this.calculatePathAndBullets(), t= this;
+				this.path = Program.R.path(d[0]).attr(this.defaultStroke);
+				
+				$(this.path.node).hover(function(){t.path.attr(t.hover);}, function(){t.path.attr(t.defaultStroke);});				
+				
+				$(this.path.node).dblclick(function(){t.owner.disconnect();});
+				
 				this.bulletA = Program.R.circle(d[1], d[2], 2).attr({fill: "#fff", stroke: "none"});
 				this.bulletB = Program.R.circle(d[3], d[4], 2).attr({fill: "#fff", stroke: "none"});
 			},
@@ -42,6 +59,21 @@ var Connection = Class.create({
 				this.path.attr({path: d[0]});
 				this.bulletA.attr({cx: d[1], cy: d[2]});
 				this.bulletB.attr({cx: d[3], cy: d[4]});
+				
+				switch (this.state){
+					// case 'remove-hover':
+					// 	this.path.attr(this.hover);
+					// break;
+					case 'connection-possible':
+						this.path.attr(this.possibleStroke);
+					break;
+					case 'connection-impossible':
+						this.path.attr(this.impossibleStroke);					
+					break;
+					default:
+						this.path.attr(this.defaultStroke);
+					break;
+				}
 			}
 		}));
 	},
@@ -56,7 +88,7 @@ var Connection = Class.create({
 			a = 1;
 			b = 0;
 		}
-		a = sockets[a]; b = sockets[b];
+		a = this.sockets[a]; b = this.sockets[b];
 		b.device.receiveInput(a, b, val);
 	},
 	
@@ -70,6 +102,7 @@ var Connection = Class.create({
 		this.view.remove();
 	},	
 	disconnect: function(){
+		this.remove();
 		this.a().disconnect(this.b());
 	}
 });

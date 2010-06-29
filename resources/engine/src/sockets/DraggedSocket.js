@@ -5,9 +5,12 @@ var DraggedSocket = Class.create(Socket, {
 		$super(device, '');
 		this.view.remove();
 		this.view.pad = view.pad;
-		this.view.pad.hover(Prototype.empty, Prototype.empty);
+		this.view.pad.attr({stroke:"#fff"});
+		$(this.view.pad.node).unbind('hover');		
 	},
 	_canConnect: function(socket){
 		return true;
-	}
+	},
+	isInput: function(){return false;}
+	
 });

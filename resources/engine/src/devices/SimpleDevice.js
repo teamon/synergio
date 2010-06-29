@@ -1,6 +1,8 @@
-var SimpleDevice = Class.create(Device, {
-	initialize: function($super, name){
-		$super(name, 80, 80, 10, 10);
+Program.Device.SimpleDevice = Class.create(Device, {
+	initialize: function($super, opts){
+		var def = {name: 'Hello World', height:80, width:80, x:10, y:10};
+		def.merge(opts);
+		$super(def);
 		var inp = new Input(this, 'in');
 		this.addInput(inp);
 		this.addOutput(new Output(this, 'out'));
