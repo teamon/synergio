@@ -1,6 +1,6 @@
 #! /usr/bin/env python
 import os, subprocess as sub, time
-base_dir = '/Users/Pietras/Projects/synergio/resources/engine'
+base_dir = os.path.abspath(os.curdir)
 src_dir = os.path.join(base_dir, 'src')
 src = 'engine.js'
 
