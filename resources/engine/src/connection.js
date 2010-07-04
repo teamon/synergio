@@ -10,6 +10,7 @@ var Connection = Class.create({
 			bulletB: null,
 			owner: this,
 			state: '',
+			animationBullet: {remove: function(){}},
 			
 			defaultStroke: {stroke: "#fff", fill: "none", "stroke-width": 3, "stroke-opacity": 0.5},
 			possibleStroke: {stroke: "#0f0"},
@@ -51,10 +52,12 @@ var Connection = Class.create({
 			},
 			remove: function(){
 				this.path.remove();
+				this.animationBullet.remove();
 				this.bulletA.remove();
 				this.bulletB.remove();
 			},
 			repaint: function(){
+				this.animationBullet.remove();
 				var d = this.calculatePathAndBullets();
 				this.path.attr({path: d[0]});
 				this.bulletA.attr({cx: d[1], cy: d[2]});
@@ -89,7 +92,16 @@ var Connection = Class.create({
 			b = 0;
 		}
 		a = this.sockets[a]; b = this.sockets[b];
-		b.device.receiveInput(a, b, val);
+		
+		//b.device.onReceiveInput(a, b, val);
+		setTimeout(function(){b.device.onReceiveInput(a, b, val);}, 0);		
+		
+		var d = this.view.calculatePathAndBullets();
+		var bullet = Program.R.circle(d[1], d[2], 3).attr({fill: "#fff", stroke: "none"});
+		bullet.animateAlong(this.view.path, 100, false, function(){
+			setTimeout(function(){bullet.remove();}, 0);
+		});
+		this.view.animationBullet = bullet;
 	},
 	
 	a: function(){
@@ -101,8 +113,11 @@ var Connection = Class.create({
 	remove: function(){
 		this.view.remove();
 	},	
-	disconnect: function(){
+	disconnect: function(){		
+		this.a().onDisconnect(this);
+		this.b().onDisconnect(this);
+		
+		this.a()._disconnect(this.b());
 		this.remove();
-		this.a().disconnect(this.b());
 	}
 });

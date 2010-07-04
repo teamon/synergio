@@ -4,12 +4,12 @@ Program.Device.MomentarySwitch = Class.create(Program.Device.SynchronizedDevice,
 	switched: false,
 	value: [0, 1],
 	initialize: function($super, opts){
-		var defaults = {width: 60, height: 50, name: 'Switch'};
+		var defaults = {width: 70, height: 50, name: 'Momentary'};
 		$super(defaults.merge(opts));
 		
 		this.addOutput(new Output(this, 'Out'));
 
-		this.view.button = Program.C.Button(this.view.set, {x: this.x, y: this.y});
+		this.view.button = Program.C.Button(this.view, {x: this.x + 10, y: this.y});
 		var t = this;
 		
 		this.view.button.mousedown(function(){
@@ -21,6 +21,6 @@ Program.Device.MomentarySwitch = Class.create(Program.Device.SynchronizedDevice,
 		});
 	},
 	clockTick: function(clock){
-		this.outputs.first().send(this.value[(this.switched?1:0)]);
+		this.outputs.first().send(this.value[+this.switched]);
 	}
 });

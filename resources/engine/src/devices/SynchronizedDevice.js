@@ -7,9 +7,10 @@ Program.Device.SynchronizedDevice = Class.create(Device, {
 		
 		this.repaint();
 	},
-	receiveInput: function($super, from, to, val){
+	onReceiveInput: function($super, from, to, val){
 		if (to == this.clockInput){
 			this.clockTick(from.device);
+			return true;
 		}else
 			$super(from, to, val);
 	},
@@ -19,7 +20,7 @@ Program.Device.SynchronizedDevice = Class.create(Device, {
 		$super();
 		this.inputs.unshift(this.clockInput);
 		
-		var pos = this.defaultInputBase();
+		var pos = this._defaultInputBase();
 		pos[1] = this.y + this.height - 8;
 		this.clockInput.repaint(pos[0], pos[1]);
 	}

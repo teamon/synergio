@@ -86,7 +86,7 @@ var Socket = Class.create({
 	
 	acceptsTypeOf: function(socket){
 		//input is supposed to check if outputs return type is compatible
-		//ouptut should return inputs acceptsTypeOf
+		//ouptut should return input.acceptsTypeOf
 		return socket.acceptsTypeOf(socket);
 	},
 	
@@ -98,10 +98,16 @@ var Socket = Class.create({
 		return (socket.isInput() == !this.isInput()) && this.acceptsTypeOf(socket);
 	},
 	
+	//FIXME: po puszczeniu myszki sockety czasem sie nie lacza, mimo ze byl zielony kolor
+	hasPoint: function(x, y){
+		var b = this.view.pad.getBBox(), E = b.width + 2;
+		return (Math.abs(b.x - x) < E && Math.abs(b.y - y) < E);
+	},
+	
 	connect: function(socket){
 		if (!this.canConnect(socket)) return null;
 		if (this.isInput()) return socket.connect(this);
-		this.disconnect(socket);
+		this._disconnect(socket);
 		var connection = new Connection(this, socket);
 		
 		this.connections.push(connection);
@@ -111,7 +117,7 @@ var Socket = Class.create({
 		return connection;
 	},
 	
-	disconnect: function(socket){
+	_disconnect: function(socket){ //use connection.disconnect
 		var t = this;
 		var pred = function(conn){
 			return (conn.sockets.pos(isEqualPred(socket)) != -1 && conn.sockets.pos(isEqualPred(t)) != -1);
@@ -125,15 +131,15 @@ var Socket = Class.create({
 			this.connections[0].disconnect();
 	},
 	
-	updateConnections: function(){
-		this.connections.forEach(function(conn){conn.repaint();});
-	},
+	onDisconnect: function(conn){this.device.onDisconnect(conn)},
+	onConnect: function(conn){this.device.onConnect(conn)},	
+	
 	repaint: function(x, y){
 		this.x = x;
 		this.y = y;
 		this.view.repaint();
 		
-		this.updateConnections();
+		this.connections.forEach(function(conn){conn.repaint();});
 	},
 	remove: function(){
 		this.view.remove();

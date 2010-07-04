@@ -43,25 +43,25 @@ var Device = Class.create({
 		}));
 		this.view.repaint();
 	},
-	getSocketPos: function(pos, i){
+	_getSocketPos: function(pos, i){
 		return [pos[0], pos[1] + 15*i];
 	}, 
 	
-	defaultInputBase: function(){return [this.x + 8, this.y + 28];},
-	defaultOutputBase: function(){return [this.x + this.width - 8, this.y + 28];},
+	_defaultInputBase: function(){return [this.x + 8, this.y + 28];},
+	_defaultOutputBase: function(){return [this.x + this.width - 8, this.y + 28];},
 	
 	repaint: function(){
 		this.view.repaint();
 		
 		var dev = this;
 		var nextSocketPos = function(pos){
-			return dev.getSocketPos(pos, 1);
+			return dev._getSocketPos(pos, 1);
 		};
 				
-		var pos = this.defaultInputBase();
+		var pos = this._defaultInputBase();
 		this.inputs.forEach(function(socket){socket.repaint(pos[0], pos[1]); pos = nextSocketPos(pos);});
 		
-		pos = this.defaultOutputBase();
+		pos = this._defaultOutputBase();
 		this.outputs.forEach(function(socket){socket.repaint(pos[0], pos[1]); pos = nextSocketPos(pos);});
 	},
 	translate: function(dx, dy){
@@ -71,7 +71,10 @@ var Device = Class.create({
 	onDrag: function(dragging_over, dx, dy, event){
 		this.translate(dx, dy);
 	},
-	receiveInput: function(fromInput, toInput, val){},
+	onReceiveInput: function(fromInput, toInput, val){}, //overload me
+	//FIXME: eventy nie powinny byc odpalane podczas drag'n dropa
+	onConnect: function(connection){},
+	onDisconnect: function(connection){},
 	send: function(output, val){
 		if (Object.isNumber(output)){			
 			this.outputs[0].send(val);
@@ -81,21 +84,20 @@ var Device = Class.create({
 	},
 	addInput: function(socket){
 		this.inputs.push(socket);
-		var pos = this.getSocketPos(this.defaultInputBase(), this.inputs.length-1);
-		socket.repaint(pos[0], pos[1]);
-	},	
-	addOutput: function(socket){
-		this.outputs.push(socket);
-		var pos = this.getSocketPos(this.defaultOutputBase(), this.outputs.length-1);
+		var pos = this._getSocketPos(this._defaultInputBase(), this.inputs.length-1);
 		socket.repaint(pos[0], pos[1]);
 	},
-	socketOfAt: function(sockets, x, y){
+	addOutput: function(socket){
+		this.outputs.push(socket);
+		var pos = this._getSocketPos(this._defaultOutputBase(), this.outputs.length-1);
+		socket.repaint(pos[0], pos[1]);
+	},
+	_socketOfAt: function(sockets, x, y){
 		return sockets.find(function(socket){
-			var b = socket.view.pad.getBBox(), E = b.width + 2;
-			return (Math.abs(b.x - x) < E && Math.abs(b.y - y) < E);
+			return socket.hasPoint(x, y);
 		});
 	},
 	socketAt: function(x, y){
-		return this.socketOfAt(this.inputs, x, y) || this.socketOfAt(this.outputs, x, y);
+		return this._socketOfAt(this.inputs, x, y) || this._socketOfAt(this.outputs, x, y);
 	}
 });

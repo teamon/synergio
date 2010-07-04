@@ -87,6 +87,10 @@ Array.prototype.find = function(fun){
 }
 
 Array.prototype.pos = function(fun){
+	if (typeof(fun) != 'function') {
+		var tmp = fun;
+		fun = function(x){return tmp == x};
+	}
     for (var i=0; i < this.length; i++) {
         if(fun(this[i])) return i;
     }
