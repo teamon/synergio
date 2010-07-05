@@ -77,7 +77,7 @@ var Device = Class.create({
 	onDisconnect: function(connection){},
 	send: function(output, val){
 		if (Object.isNumber(output)){			
-			this.outputs[0].send(val);
+			this.outputs[output].send(val);
 		}else{
 			output.send(val);
 		}

@@ -56,9 +56,20 @@ window.onload = function(){
 	Program.addDevice(new Program.D.Log({x:100, y:100}));
 	Program.addDevice(new Program.D.Button({x:10, y: 100}));
 	Program.addDevice(new Program.D.MomentarySwitch({x:200, y: 200}));
-	Program.addDevice(new Program.D.Clock({x: 10, y: 300, freq: 5}));
-	Program.addDevice(new Program.D.Slider({x: 300, y: 10}));	
-	Program.addDevice(new Program.D.SynchronizedRepeater({x: 200, y: 300}));	
-	Program.addDevice(new Program.D.RandomGenerator({x:100, y:300}));
-	Program.addDevice(new Program.D.Graph({x:330, y:300}));
+	var clock = new Program.D.Clock({x: 10, y: 300, freq: 15});
+	Program.addDevice(clock);
+	
+	Program.addDevice(new Program.D.Slider({x: 300, y: 10}));
+	
+	var repeater = new Program.D.SynchronizedRepeater({x: 200, y: 300});
+	Program.addDevice(repeater);
+	
+	var random = new Program.D.RandomGenerator({x:100, y:300});
+	Program.addDevice(random);
+	
+	var graph = new Program.D.Graph({x:330, y:300});
+	Program.addDevice(graph);
+	
+	random.inputs.first().connect(clock.outputs.first());
+	random.outputs.first().connect(graph.inputs.first());
 };
