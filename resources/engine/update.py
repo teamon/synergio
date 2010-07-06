@@ -55,4 +55,7 @@ cmd = '/usr/bin/sprocketize -C %(base_dir)s -a %(dist_dir)s -I %(src_dir)s %(src
 
 fscallback(src_dir, False)
 pyfsevents.registerpath(src_dir, fscallback)
-pyfsevents.listen()
+try:
+	pyfsevents.listen()
+except KeyboardInterrupt:
+	exit(0)
