@@ -1,6 +1,6 @@
 //= require <devices/SynchronizedDevice>
 //= require <components/Button>
-Program.Device.MomentarySwitch = Class.create(Program.Device.SynchronizedDevice,{
+Program.Device.MomentarySwitch = Class.create(Program.Device.Abstract.SynchronizedDevice,{
 	switched: false,
 	value: [0, 1],
 	initialize: function($super, opts){

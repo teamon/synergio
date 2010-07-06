@@ -1,4 +1,4 @@
-Program.Device.SynchronizedDevice = Class.create(Device, {
+Program.Device.Abstract.SynchronizedDevice = Class.create(Program.Device.Abstract.Device, {
 	clockInput: null,
 	initialize: function($super, opts){
 		$super(opts);

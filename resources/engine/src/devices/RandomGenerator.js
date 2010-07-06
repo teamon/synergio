@@ -1,6 +1,6 @@
 //= require <devices/SynchronizedDevice>
 //TODO: obsulga zakresu zwracanych liczb
-Program.Device.RandomGenerator = Class.create(Program.Device.SynchronizedDevice,{
+Program.Device.RandomGenerator = Class.create(Program.Device.Abstract.SynchronizedDevice,{
 	initialize: function($super, opts){
 		var defaults = {name: 'Random', width: 50, height: 40, min:0, max: 100};
 		opts = defaults.merge(opts);

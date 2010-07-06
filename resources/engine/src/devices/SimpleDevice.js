@@ -1,4 +1,4 @@
-Program.Device.SimpleDevice = Class.create(Device, {
+Program.Device.SimpleDevice = Class.create(Program.Device.Abstract.Device, {
 	initialize: function($super, opts){
 		var def = {name: 'Hello World', height:40, width:40, x:10, y:10};
 		def.merge(opts);

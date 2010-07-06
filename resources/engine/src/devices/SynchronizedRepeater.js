@@ -1,5 +1,5 @@
 //= require <devices/SynchronizedDevice>
-Program.Device.SynchronizedRepeater = Class.create(Program.Device.SynchronizedDevice,{
+Program.Device.SynchronizedRepeater = Class.create(Program.Device.Abstract.SynchronizedDevice,{
 	value: undefined,
 	initialize: function($super, opts){
 		var defaults = {width: 50, height: 55, name: 'Repeater'};

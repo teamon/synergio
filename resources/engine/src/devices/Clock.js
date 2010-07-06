@@ -1,5 +1,5 @@
 //= require <components/button>
-Program.Device.Clock = Class.create(Device, {
+Program.Device.Clock = Class.create(Program.Device.Abstract.Device, {
 	freq: 0,
 	enabled: false,
 	value: 1,

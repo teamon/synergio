@@ -11,7 +11,7 @@ var Program = {
 	
 	textDefaults: {"stroke-width": 0, fill: "#fff", "font-family": "Lucida Grande", "font-size": "11pt", "font-style": "normal"},
 		
-	Device: {},
+	Device: {Abstract: {}},
 	Components: {},
 	devices: [],
 	

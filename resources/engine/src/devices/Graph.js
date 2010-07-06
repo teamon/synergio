@@ -1,4 +1,4 @@
-Program.Device.Graph = Class.create(Device,{
+Program.Device.Graph = Class.create(Program.Device.Abstract.Device,{
 	data: [],
 	maxLength: 35,
 	maxValue: 100,

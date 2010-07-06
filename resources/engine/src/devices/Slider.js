@@ -1,5 +1,5 @@
 //= require <components/Slider>
-Program.Device.Slider = Class.create(Device, {
+Program.Device.Slider = Class.create(Program.Device.Abstract.Device, {
 	initialize: function($super, opts){
 		var defaults = {name: 'Slider', width: 40, height: 140, max: 100, min: 0};
 		opts = defaults.merge(opts);

@@ -1,4 +1,4 @@
-var Device = Class.create({
+Program.Device.Abstract.Device = Class.create({
 	x: 0,
 	y: 0,
 	width: 0,

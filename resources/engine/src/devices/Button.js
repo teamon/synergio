@@ -1,5 +1,5 @@
 //= require <components/Button>
-Program.Device.Button = Class.create(Device, {
+Program.Device.Button = Class.create(Program.Device.Abstract.Device, {
 	value: 1,
 	initialize: function($super, opts){
 		var defaults = {name: 'Button', width: 60, height: 40};
