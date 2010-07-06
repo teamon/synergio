@@ -9,7 +9,7 @@ Program.Device.Slider = Class.create(Program.Device.Abstract.Device, {
 		var device = this;
 		this.view.slider = Program.C.Slider(this.view, {max: opts.max, min: opts.min});
 		this.view.slider.change(function(h){
-      device.outputs.first().send(this.value);
+      device.outputs.first().send(parseInt(this.value));
   	});		
 	}
 });

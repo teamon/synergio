@@ -48,18 +48,20 @@ var Presets = {};
 //= require <devices/SynchronizedRepeater>
 //= require <devices/RandomGenerator>
 //= require <devices/Graph>
+//= require <devices/functions/Operator>
+//= require <devices/Implode>
 window.onload = function(){
 	Program.init();
 
 	Program.addDevice(new Program.D.SimpleDevice({name: 'elo'}));
 	Program.addDevice(new Program.D.SimpleDevice({name: 'lol', x:100, y:200}));
-	Program.addDevice(new Program.D.Log({x:100, y:100}));
+	Program.addDevice(new Program.D.Log({x:300, y:100}));
 	Program.addDevice(new Program.D.Button({x:10, y: 100}));
 	Program.addDevice(new Program.D.MomentarySwitch({x:200, y: 200}));
 	var clock = new Program.D.Clock({x: 10, y: 300, freq: 15});
 	Program.addDevice(clock);
 	
-	Program.addDevice(new Program.D.Slider({x: 300, y: 10}));
+	Program.addDevice(new Program.D.Slider({x: 400, y: 10}));
 	
 	var repeater = new Program.D.SynchronizedRepeater({x: 200, y: 300});
 	Program.addDevice(repeater);
@@ -72,4 +74,7 @@ window.onload = function(){
 	
 	random.inputs.first().connect(clock.outputs.first());
 	random.outputs.first().connect(graph.inputs.first());
+	
+	Program.addDevice(new Program.D.Operator({x:200, y:100}, '+'));
+	Program.addDevice(new Program.D.Implode({x:120, y:100, inputs: 2}));
 };
